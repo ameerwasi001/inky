@@ -1,0 +1,347 @@
+<html>
+  <head>
+    <meta charset="UTF-8">
+
+    <script>
+      // Add the platform name as a class on the root HTML element for custom CSS
+      document.getElementsByTagName("html")[0].classList.add(process.platform);
+      const placeholder = "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wCEAAkGBxITDxMSDxEQFRUVFxMVEBIVFQ8QFxIWFRoZFhUVFRUYHSggGBolGxUVITIhJSkrLi4uFx8zODMsNyktLisBCgoKBQUFDgUFDisZExkrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrK//AABEIAPkAywMBIgACEQEDEQH/xAAbAAEAAwEBAQEAAAAAAAAAAAAAAQMFBAYCB//EADsQAAIBAAYIBAQEBQUBAAAAAAABAgMEBREhMRJBUWFxgZGxMqHB0SIjM+FScoLwE0KiwvFTYpKy0hT/xAAUAQEAAAAAAAAAAAAAAAAAAAAA/8QAFBEBAAAAAAAAAAAAAAAAAAAAAP/aAAwDAQACEQMRAD8A/TAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAC+iyKC+iyAoAAAAAAAAJAAgANgCTLrVq6qNfqfovczp1ibznJ832A9HOSSvk0ltbSKv/so/wDUh1Xc89OTeLbe9tvuVtgeoU78suWJ9nn6hWnRv/a/Etm9HoEAAAAAAACQABAAvosigvosgKAAAAAAkgASQAAMi161e/4ayXi3vZwXfgadYplCDk9WS2vUjzbd+LzeLAAAD5kTcSABuWTS30dz/ld3LNd7uRhmnYcsZrcn0v8AcDVAAAAASCABJAAAvosigvosgKAAABEkSgAAAAADgtVXq7YpTfFL4f7uhjHoKWj0tPetHh8Ev/Z59MAAwAAAA0LE8cvy+qM80rGXxS/LHzxA1gAAB8pYn0AAAAAAC+iyKC+iyAoAAAAAAAAAIUgPieU3xa/4o80j1KR5mmo9GTjsbQHyAAAAAg17IjjPhRromZLWBt2asaX87XT/ACB2gAAAAAAAAiTJTAF9FkUF9FkBQAAAAAAHy3f5gQ3efUY3BRJAGba9VvX8SOa8XDby7cDSAHlwX16hUKRxjlg+F+NxQAJSISF4H1BXyS2tLqzbszwN/inN+d3oY9TXzIfmi+jvNqzFdQw4N9W2B0gAAAABEmS2fMUBCjt7H2EgAL6LIoL6LICgAAAAAFwAAAic0lfJpLa8AJBxUlqUay0pcFd3OKmtSb8N0VuxfV+wFNoyvpZ8buiS9DnDd+Lx2vMAAABbVPHfsU30jJ+hv1aN1HBbIxXkjzkZNX3a01yaufc2aC1IPxXxfOS6oDuBEJpq+LTW1O8kAAADQAAAAAX0WRQX0WQFAAAkEAAAADe3meerlZdJK95fyrYvc2LSndRT4JdWk/JmAAIkSAIRIAAAAAAB90NNKDvi7n5Pc1rN6p1pUkb1g14ls+x54sq1O4SUlzW1a0B6UgijmpJNYp4okAAAAAAFkL7sPQrL6LICgAAAAAAAHFbD+VxkuzfoYhoWvWVJ6Cyi8Xvyu5GeAAAAAAAAABF5IAAAaFk1vRehLJ+Hc9nBmyeVNuy65pLRl4lk/wAS9wO4AAAAAL6LIoL6LICgAAAAAKa7TaFHKSzuw4vBPzLjltSF9FLdc+jxAwUiWCAAAAAAAQ2Gz5uAJbT7BbVaHTmo7c9y1gdEbPbolNeLF6O2Oq7fr5nEeoS2cjhr9n6V8oYS1rVL2YGKTCbTTTuaxTIauwfNAD0NTrKpI368pLY/YvPO1SsOEtJZZSW1HoaOaaTTweKA+gCABfRZFBfRZAUAAAAAAaTVzyeD4PMFdZldCb2Rk/IDzRJBIAAAAABDRIAA2LGoboubzlguC+/YyaODlJRWbaS5npYQSSSySSXICQABx2hUdNaUfEv6tz37zDa281sPUHBadS0lpwXxLNfiXuBjI0LKrei9B5Pw7n9zOAHqQctm1nThj4o4S37GdQAvosigvosgKAAAbCYaCAHNaTuoZ8EurSOk47Wfynvce9/owMMAAAgADAAAAAd1jUd9I5fhXm8O15tHBYsflt7ZPyS+53gAABF59EXHBa1a0Y6Czlnuj9/cDMrk4ukk4LC/rtfMpBAHbZCf8VXbHpcP83G4cdl1bQhe/FLHgtSOwAX0eRQX0WQFAAAAAAZNtUvxRgtWL4vLy7ms3t5nmqel0pOT1u/2XQD4ASvaSzbSXPAvtCF1K7sro3dEgKAAAAAAAAblk/RXGXc7Dksl/KW5yXr6nWAAIlJJNt3JZvYB8VmnUIuT5La9SPO0tI5ScpZvMur1adJK/wDlXhXq97OcAadmVG+6c1hnFbd73FVm1LSelJfCsl+L7G0BJB8OV+R9oAX0WRQX0WQFAAAAADntGV1FPhd1aXqeebN215fKe9xXr6GCkB12TRaVMnqjfJ9l5tdCy2Pq8kdtkUGjDSecrny1e/Q4rY+r+leoHEAAAAAEoIgDWsSkwlHY01zwfZdTSPO1On0JqWrKXB5+/I35UsVHS0lo7c0B9t7eZiWjXdN6MfCv6nt4HzXq854LCOzW+PsciV+CxepLG8AaFQs7S+KkXw6o65cdiL6jZt3xUlzeqOaXHazSAhI+JO/95/Y+pfveIoBFEgAC+iyKC+iyAoAAAEkAZ1ty+CK2yv6L7mZV6LSnGO148Nfled9uPGC3SfW72PixaO+cpbFcuL+yfUDYSMO13818I9jcMG1H86X6f+qA5QCGwJBCJAAAAAALKvQSm7ori9S4s26nUo0e+WuXtsR82XSp0aSSTjhJf3czrAAkgAAAAAAF9FkUF1HJXAUgACSAAMW2ZfNW6K7t+qO6yaO6iT/E2/RdvMz7X+r+mPqa9T+nD8seyAtPP2i/nT4rsj0B56v/AFZ8QKCGiQBCRIAAAAAABdUqxoTUtWUuD/d/I9EeWPS1b6cPyx7IC0gAAAAAAAFtHHAqL6LID//Z"
+    </script>
+
+    <style>
+        .main-charcter-edit-profile {
+            display: flex;
+        }
+
+        .main-charcter-edit {
+
+        }
+
+        h2 {
+            font-size: 15px;
+        }
+
+        .label-input {
+            display: flex;
+            align-items: center;
+        }
+
+        .label-input > p {
+            margin-right: 10px;
+        }
+
+        .row {
+            display: flex;
+        }
+
+        .label-input > input {
+            width: 50vw;
+            height: 30px;
+        }
+
+        .label-input-col {
+            display: flex;
+            flex-direction: column;
+            margin-right: 20px;
+        }
+
+        .label-input-col > p {
+            margin-right: 10px;
+        }
+
+        .label-input-col > input {
+            width: 10vw;
+            height: 30px;
+        }
+
+        .w-ecol > input {
+            width: 15vw;
+        }
+
+        .half-width {
+            width: 40vw;
+        }
+
+        .half-width > p {
+            font-size: 15px;
+        }
+
+        .primary-btn {
+            margin-top: 1rem;
+
+            width: 130px;
+            height: 50px;
+            border-radius: 10px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: blue;
+            color: white;
+
+            cursor: pointer;
+        }
+
+        #image {
+            margin-left: 1rem;
+        }
+    </style>
+  </head>
+
+  <body style="background-color: grey;">
+    <div class="main-charcter-edit-profile">
+        <div class="main-charcter-edit">
+            <input id="upload" type="file" style="display: none;">
+            <h2>General</h2>
+            <div class="label-input">
+                <p>Name *:</p>
+                <input type="text" id="name"/>
+            </div>
+            <div class="label-input">
+                <p>Title *:</p>
+                <input type="text" id="title-input" list="title"/>
+                <datalist id="title">
+                </datalist>
+            </div>
+            <div class="label-input">
+                <p>Role *:</p>
+                <input id="role-input" list="role">
+                <datalist id="role">
+                </datalist>
+            </div>
+            <div class="label-input">
+                <p>Archetype:</p>
+                <input type="text" id="archetype"/>
+            </div>
+            <div class="label-input">
+                <p>Style:</p>
+                <input type="text" id="style"/>
+            </div>
+        </div>
+        <div>
+            <img id="image"/>
+        </div>
+    </div>
+    <div class="physical-section">
+        <h2>Physical</h2>
+        <div class="row">
+            <div class="label-input-col">
+                <p>Age</p>
+                <input type="text" id="age"/>
+            </div>
+            <div class="label-input-col">
+                <p>Height</p>
+                <input type="text" id="height"/>
+            </div>
+            <div class="label-input-col">
+                <p>Weight</p>
+                <input type="text" id="weight"/>
+            </div>
+            <div class="label-input-col">
+                <p>Sex</p>
+                <input type="text" id="sex"/>
+            </div>
+            <div class="label-input-col">
+                <p>Misc.</p>
+                <input type="text" id="misc"/>
+            </div>
+        </div>
+        <div class="row">
+            <div class="label-input-col w-ecol">
+                <p>Eye Color</p>
+                <input type="text" id="eye-color"/>
+            </div>
+            <div class="label-input-col  w-ecol">
+                <p>Hair Color</p>
+                <input type="text" id="hair-color"/>
+            </div>
+            <div class="label-input-col  w-ecol">
+                <p>Body Type</p>
+                <input type="text" id="body-type"/>
+            </div>
+            <div class="label-input-col  w-ecol">
+                <p>Ethinicity</p>
+                <input type="text" id="ethinicity"/>
+            </div>
+        </div>
+    </div>
+    <div class="other-section">
+        <h2>Others</h2>
+        <div class="row">
+            <div class="label-input">
+                <p>Occupation</p>
+                <input type="text" id="occupation"/>
+            </div>
+            <div class="label-input">
+                <p>Hobbies</p>
+                <input type="text" style="width: 25vw;" id="hobbies"/>
+            </div>
+        </div>
+        <div class="row">
+            <div class="label-input-col">
+                <p>Background</p>
+                <textarea cols="40" rows="10" id="background"></textarea>
+            </div>
+            <div class="label-input-col">
+                <p>Tags</p>
+                <textarea cols="40" rows="10" id="tags"></textarea>
+            </div>
+        </div>
+        <div class="connection-section">
+            <div class="row">
+                <div class="half-width">
+                    <p>Similar</p>
+                </div>
+                <div class="half-width">
+                    <p>Synonymous</p>
+                </div>
+            </div>
+            <div class="row">
+                <div class="half-width">
+                    <p>Inverted</p>
+                </div>
+                <div class="half-width">
+                    <p>Complimentary</p>
+                </div>
+            </div>
+        </div>
+        <div class="notes-section">
+            <div class="label-input-col">
+                <h2>Notes</h2>
+                <textarea style="width: 90vw;" rows="10" id="notes"></textarea>
+            </div>
+        </div>
+        <div class="add-character-section">
+            <div class="primary-btn" id="character-btn">
+                <p>Add Character</p>
+            </div>
+        </div>
+    </div>
+  </body>
+
+  <script>
+    const loc = decodeURIComponent(location.search.split("?character=")[1])
+    console.log(loc)
+    const characterData = JSON.parse(loc)
+    const imgEl = document.getElementById("image")
+    imgEl.src = placeholder
+
+    const ids = [
+        'name',
+        'title-input',
+        'role-input',
+        'archetype',
+        'style',
+        'age',
+        'height',
+        'weight',
+        'sex',
+        'misc',
+        'eye-color',
+        'hair-color',
+        'body-type',
+        'ethinicity',
+        'occupation',
+        'hobbies',
+        'background',
+        'tags',
+        'notes',
+    ]
+
+    const inputs = ids.map(id => [id.split("-input").join(""), document.getElementById(id)])
+    if(characterData) {
+        for(const arr of inputs) {
+            const id = arr[0]
+            const input = arr[1]
+            if(characterData[id]) input.value = characterData[id]
+            if(characterData[id]) input.innerHTML = characterData[id]
+        }
+        if(characterData.image) imgEl.src = characterData.image
+    }
+
+
+    const uploadEl = document.getElementById("upload")
+
+    imgEl.onclick = ev => {
+        uploadEl.click()
+    }
+
+    uploadEl.onchange = ev => {
+        const file = ev.target.files[0]
+        const reader = new FileReader();
+
+        reader.onload = function (e) {
+            imgEl.src = e.target.result;
+        }
+
+        reader.readAsDataURL(file);
+    }
+  </script>
+  <script>
+    const store = require('electron-json-storage')
+    let listStr = store.getSync("roles")
+    if(!listStr) listStr = ""
+    const list = listStr.split(",")
+    const roleEl = document.getElementById("role")
+    roleEl.innerHTML = list.map(el => `<option value="${el}">${el}</option>`).join("\n")
+
+    let titleListStr = store.getSync("titles")
+    console.log(titleListStr, typeof titleListStr)
+    if(!titleListStr) titleListStr = ""
+    const titleList = titleListStr.split(",")
+    const titleEl = document.getElementById("title")
+    titleEl.innerHTML = titleList.map(el => `<option value="${el}">${el}</option>`).join("\n")
+    console.log(titleEl, titleListStr, titleList)
+  </script>
+
+    <script>
+
+        const fromEntries = entries => {
+            const obj = {}
+            for(const tuple of entries) obj[tuple[0]] = tuple[1]
+            return obj
+        }
+
+        const { ipcRenderer } = require('electron');
+        const remote = require('electron').remote;
+        const charButton = document.getElementById("character-btn")
+
+        setInterval(() => {
+            const requiredIds = [
+                'name',
+                'title-input',
+                'role-input',
+            ]
+            const requiredInputs = requiredIds.map(id => document.getElementById(id))
+            let enabled = true
+            for(const inp of requiredInputs) {
+                enabled = enabled && !!inp.value
+            }
+            if(enabled) {
+                charButton.style.background = "blue"
+                charButton.style.color = "white"
+
+            } else {
+                charButton.style.background = "white"
+                charButton.style.color = "grey"
+            }
+        }, 500);
+
+        charButton.onclick = () => {
+            const inputIds = ids;
+            const inputs = inputIds.map(id => document.getElementById(id))
+            const values = fromEntries(inputs.map(input => {
+                let value = ""
+                if(input.innerHTML) value = input.innerHTML
+                if(input.value) value = input.value
+                return [input.id.split("-input").join(""), value]
+            }))
+            values.image = imgEl.src
+            const data = {
+                id: window.location.search.split("?id=")[1],
+                character: values
+            }
+            console.log("Saving Data", data)
+            ipcRenderer.send("save-data", JSON.stringify(data))
+        }
+    </script>
+</html>

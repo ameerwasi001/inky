@@ -1,0 +1,1230 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+
+    <script>
+      // Add the platform name as a class on the root HTML element for custom CSS
+      document.getElementsByTagName("html")[0].classList.add(process.platform);
+    </script>
+
+  </head>
+  <body>
+
+    <link rel="stylesheet" href="photon/css/photon.css">
+    <link rel="stylesheet" href="ink-icons/css/ink.css">
+
+    <link rel="stylesheet" href="main.css">
+    <link rel="stylesheet" href="inkTheme.css">
+    <link rel="stylesheet" href="dark.css">
+    <link rel="stylesheet" href="contrast.css">
+    <link rel="stylesheet" href="focus.css">
+
+    <style>
+      .red-underline {
+        text-decoration: underline;
+        text-decoration-color: red;
+      }
+      .orange-underline {
+        text-decoration: underline;
+        text-decoration-color: orange;
+      }
+      .purple-underline {
+        text-decoration: underline;
+        text-decoration-color: purple;
+      }
+    </style>
+
+    <div class="window">
+      <div id="myModal" class="modal">
+
+        <!-- Modal content -->
+        <div class="modal-content">
+          <span class="close">&times;</span>
+          <p>Some text in the Modal..</p>
+        </div>
+      
+      </div>
+      
+      <h1 class="title"></h1>
+
+      <div id="toolbar" class="draggable">
+
+
+        
+        <div class="buttons left">
+
+          <div class="button nav-toggle" title="Toggle file browser">
+            <span class="icon icon-menu"></span>
+          </div>
+
+          <div class="button knot-toggle" title="Toggle knot browser">
+            <span class="icon ink-icon icon-category"></span>
+          </div>
+          <div class="button nav-back" title="Navigate back">
+            <span class="icon icon-left-dir"></span>
+          </div>
+          <div class="button nav-forward" title="Navigate forward">
+            <span class="icon icon-right-dir"></span>
+          </div>
+          <div class="button nav-forward" title="Navigate forward" style="width: unset;">
+            <span style="white-space: nowrap;">SPELL CHECK</span>
+          </div>
+          <div class="button" title="Navigate forward">
+            <input type="checkbox" id="spellcheck-box"/>
+          </div>
+          <div class="button nav-forward" title="Navigate forward" style="width: unset;">
+            <span style="white-space: nowrap;">CHARACTERS PANEL</span>
+          </div>
+          <div class="button" title="Navigate forward">
+            <input type="checkbox" id="character-box"/>
+          </div>
+          <div class="button nav-forward" title="Navigate forward" style="width: unset;">
+            <span style="white-space: nowrap;">STORY PANEL</span>
+          </div>
+          <div class="button" title="Navigate forward">
+            <input type="checkbox" id="story-box"/>
+          </div>
+          <div class="button nav-forward" title="Navigate forward" style="width: unset;">
+            <span style="white-space: nowrap;">PROCESS LINES</span>
+          </div>
+          <div class="button" title="Navigate forward">
+            <input type="checkbox" id="process-lines-box"/>
+          </div>
+          <div class="button nav-forward" title="Navigate forward" style="width: unset;">
+            <span style="white-space: nowrap;">WATCH</span>
+          </div>
+          <div class="button" title="Navigate forward">
+            <input type="checkbox" id="watch-box"/>
+          </div>
+          <div class="button" id="search-box-container" title="Navigate forward">
+            <input type="text" id="search-box" placeholder="Search"/>
+          </div>
+        </div>
+
+        
+        
+        <p class="issuesMessage hidden">No issues.</p>
+        <div class="issuesSummary hidden">
+          <div class="issueCount todo"><span>4</span> <img class="issue-icon todo" src="img/todo-icon.png"/></div>
+          <div class="issueCount warning"><span>4</span> <img class="issue-icon warning" src="img/warning-icon.png"/></div>
+          <div class="issueCount error"><span>4</span> <img class="issue-icon error" src="img/error-icon.png"/></div>
+        </div>
+
+        <div class="buttons right">
+          <div class="busySpinner"></div>
+
+          <div class="button step-back i18n" title="Rewind a single choice">
+            <span class="icon icon-reply"></span>
+          </div>
+
+          <div class="button rewind i18n" title="Restart story">
+            <span class="icon icon-reply-all"></span>
+          </div>
+
+        </div>
+
+        
+        <div class="issue-popup hidden">
+          <img class="nubbin" src="img/nubbin.png"/>
+          <div class="table">
+          </div> <!-- table  -->
+        </div>
+        
+      </div>
+
+      <div class="window-content">
+
+        <div id="main">
+          <div class="sidebar hidden">
+
+            
+            <div class="nav-wrapper hidden hasFooter" id="file-nav-wrapper">
+            </div>
+            <div class="footer">
+              <a class="add-include-button">
+                <span class="icon icon-plus"></span>
+                <span class="i18n">Add new include</span>
+              </a>
+              <div class="new-include-form">
+                <h5 class="i18n">Enter new ink filename:</h5>
+                <div class="inputWrapper">
+                  <input type="text" class="form-control i18n" placeholder="Folder/inkFileName.ink">
+                </div>
+                <div class="checkbox add-to-main-ink">
+                    <input type="checkbox" checked><span class="i18n">Add to main ink</span>
+                </div>
+                <div class="form-buttons">
+                  <button id="add-include" class="btn btn-primary pull-right i18n">Add</button>
+                  <button id="cancel-add-include" class="btn btn-default pull-right i18n">Cancel</button>
+                </div>
+              </div>
+            </div>
+            <div class="nav-wrapper hidden" id="knot-stitch-wrapper">
+            </div>
+            
+            
+          </div><!-- sidebar -->
+
+          <div class="split hidden"></div>
+
+          <div class="twopane">
+            <div id="editor"></div>
+            
+            <div class="split"></div>
+
+            <div id="player">
+              
+              <table class="expressionWatch">
+                <tbody>
+                </tbody>
+              </table>
+
+              <div class="scrollContainer">
+                <div class="innerText active">
+                </div>
+                <div class="hiddenBuffer">
+                  <div class="innerText">
+                  </div>
+                </div>
+              </div>
+
+            </div>
+          </div>
+        </div>
+
+      </div><!-- photon window-content -->
+      <div id="goto-anything-container" class="ignore-events">
+        <div id="goto-anything" class="hidden">
+          <input class="i18n" placeholder="File name, stitch, knot, line number, or text"></input>
+          <ul class="results">
+          </ul>
+        </div>
+      </div>
+
+    </div><!-- photon window -->
+
+  </body>
+
+  <script src="acesrc/ace.js" type="text/javascript" charset="utf-8"></script>
+  
+  <script src="acesrc/ext-language_tools.js"></script>
+
+  <!-- For some reason using the minified versions causes find-in-file to break -->
+  <!-- <script src="acesrc/ace-min.js" type="text/javascript" charset="utf-8"></script> -->
+  <!-- <script src="acesrc/ext-language_tools-min.js"></script> -->
+
+  <script>
+    require('./controller.js');
+    const $ = window.jQuery = require('./jquery-2.2.3.min.js');
+    const fs = require("fs");
+    const levenSort = require('./levenSort.js');
+    const inkjs = require('inkjs')
+
+    const { ipcRenderer } = require('electron');
+    const store = require('electron-json-storage')
+  </script>
+
+  <script>
+    // Get the editor
+    const editor = ace.edit("editor");
+    var Range = ace.require("ace/range").Range
+    editor.$blockScrolling = Infinity
+
+    // Get the required elements
+    const playerEl = document.getElementById("player")
+
+    // Get the project's path
+    const [_dir, ..._projectURL] = decodeURIComponent(window.location.search.split("?filePath=")).split("\\").join("/").split("/").slice(0, -1)
+    const projPath = !_dir ? null : [_dir.replace(",", ""), ..._projectURL].join(process.platform.includes("window") ? "\\" : "/")
+
+    let currWindow = null
+    let currStoryWindow = null
+    let _ = ""
+  </script>
+
+  <script>
+    const loadFontMain = (main) => {
+      if(projPath) {
+        const realPath = `${projPath}/${main}.ttf`
+        const fontName = `${main}`
+        const font = new FontFace(fontName, `url(file://${realPath})`)
+        font.load().then(loadedFace => {
+            document.fonts.add(loadedFace)
+            if(main == "font") {}
+            else if(main == "body") {}
+        })
+      }
+    }
+
+    function byteLength(str) {
+      // returns the byte length of an utf8 string
+      var s = str.length;
+      for (var i=str.length-1; i>=0; i--) {
+        var code = str.charCodeAt(i);
+        if (code > 0x7f && code <= 0x7ff) s++;
+        else if (code > 0x7ff && code <= 0xffff) s+=2;
+        if (code >= 0xDC00 && code <= 0xDFFF) i--; //trail surrogate
+      }
+      return s;
+    }
+
+    function getAllIndexes(str, searchKeyword) {
+
+      const startingIndices = [];
+
+      let indexOccurence = str.indexOf(searchKeyword, 0);
+
+      while(indexOccurence >= 0) {
+          startingIndices.push(indexOccurence);
+
+          indexOccurence = str.indexOf(searchKeyword, indexOccurence + 1);
+      }
+
+      return startingIndices
+    }
+
+    const fromEntries = entries => {
+      const obj = {}
+      for(const tuple of entries) obj[tuple[0]] = tuple[1]
+      return obj
+    }
+
+    const writeFile = (file, contents) => {
+      fs.writeFileSync(file, contents)
+      return contents
+    }
+
+    const writeCharacterDB = contents => fs.writeFileSync(`${projPath}/characters.json`, JSON.stringify(contents))
+    const writeStoryDB = contents => fs.writeFileSync(`${projPath}/stories.json`, JSON.stringify(contents))
+
+    function findElementsWithText() {
+      const elements = []
+      function recurseEl(element) {
+        if(element.childNodes[0] && element.childNodes[0].nodeType == 3) elements.push(element)
+        else for(const el of element.children) recurseEl(el)
+      }
+      const lineGroups = document.getElementsByClassName("ace_line_group")
+      for(const el of lineGroups) recurseEl(el);
+      return elements;
+    }
+
+    function serializeFile(cat, files) {
+      writeFile(`${projPath}/${cat}.txt`, files.join("\n"))
+    }
+
+    function createBrowserWindow(character) {
+      const remote = require('electron').remote;
+      const BrowserWindow = remote.BrowserWindow;
+      const win = new BrowserWindow({
+        height: 600,
+        width: 800,
+        webPreferences: {
+          nodeIntegration: true
+        }
+      });
+
+      // console.log(remote.getCurrentWindow().id)
+      win.loadURL(`file://${__dirname}/../renderer/modal.html?character=${encodeURIComponent(JSON.stringify(character ? character : null))}`);
+
+      return win
+    }
+
+    function createBrowserStoryWindow(story) {
+      const remote = require('electron').remote;
+      const BrowserWindow = remote.BrowserWindow;
+      const win = new BrowserWindow({
+        height: 330,
+        width: 400,
+        webPreferences: {
+          nodeIntegration: true
+        }
+      });
+
+      // console.log(remote.getCurrentWindow().id)
+      win.loadURL(`file://${__dirname}/../renderer/storyModal.html?story=${encodeURIComponent(JSON.stringify(story ? story : null))}`);
+
+      return win
+    }
+
+    const bindClass = (c, f) => e => {
+      if (window.event) e = event.srcElement;
+      else e = e.target;
+
+      const currElContains = e.classList && e.classList.contains(c);
+      const parentElContains = e.parentElement && e.parentElement.classList && e.parentElement.classList.contains(c);
+
+      if (currElContains || parentElContains) f(currElContains ? e : e.parentElement)
+    }
+
+    const bindId = (c, f) => e => {
+      if (window.event) e = event.srcElement;
+      else e = e.target;
+
+      const currElContains = e.id && e.id == c;
+      const parentElContains = e.parentElement && e.parentElement.id && e.parentElement.id == c;
+      if (currElContains || parentElContains) f(currElContains ? e : e.parentElement)
+    }
+
+    const getImmediateText = x => [].reduce.call(x.childNodes, function(a, b) { return a + (b.nodeType === 3 ? b.textContent : ''); }, '').trim().split("\n").join("")
+    const genStory = () => `
+        <div class="main-story">
+          <div id="story-desc" class="story-desc"></div>
+          <div class="story-list">
+            ${storiesDB.stories.map(ch => `<div id="${encodeURIComponent(JSON.stringify(ch))}" class="story-list-item">
+              <img id="${encodeURIComponent(JSON.stringify(ch))}" class="story-img" src="${ch.image}"/>
+              <p>${ch.title}</p>
+            </div>`).join("\n")}
+          </div>
+          <div class="story-footer">
+            <p id="${encodeURIComponent(JSON.stringify({}))}" class="story-modal">+ Add Story</p>
+          </div>
+        </div>
+      `
+  </script>
+
+  <script>
+    // Get the text files
+    const files = !projPath ? { pastense: '', spellcheck: '', restricted: '' } : fromEntries(Object.entries({
+      pastense: !fs.existsSync(`${projPath}/pastense.txt`) ? writeFile(`${projPath}/pastense.txt`, '') : fs.readFileSync(`${projPath}/pastense.txt`, "utf8"),
+      spellcheck: !fs.existsSync(`${projPath}/spellcheck.txt`) ? writeFile(`${projPath}/spellcheck.txt`, '') : fs.readFileSync(`${projPath}/spellcheck.txt`, "utf8"),
+      restricted: !fs.existsSync(`${projPath}/restricted.txt`) ? writeFile(`${projPath}/restricted.txt`, '') : fs.readFileSync(`${projPath}/restricted.txt`, "utf8"),
+    }).map(tuple => {
+      return [tuple[0], tuple[1].split(" ").join("\n").split("\n").map(x => x.trim())]
+    }))
+
+    const charactersDB = !projPath ? {} : JSON.parse(!fs.existsSync(`${projPath}/characters.json`) ? writeFile(`${projPath}/characters.json`, '{}') : fs.readFileSync(`${projPath}/characters.json`, "utf8"))
+    const storiesDB = !projPath ? {} : JSON.parse(!fs.existsSync(`${projPath}/stories.json`) ? writeFile(`${projPath}/stories.json`, '{}') : fs.readFileSync(`${projPath}/stories.json`, "utf8"))
+    if(!charactersDB.characters) charactersDB.characters = []
+    if(!storiesDB.stories) storiesDB.stories = []
+
+    let knotObject = {}
+
+    // let initHTML = document.getElementsByClassName("nav-wrapper")[0] ? document.getElementsByClassName("nav-wrapper")[0].innerHTML : ''
+    let oldHTML = ""
+    let oldHTML2 = ""
+    let oldHTML3 = ""
+    let currWord = null
+
+    function processTextFiles() {
+      if(!projPath) return
+      const elementsWithText = findElementsWithText()
+      // for(const k in { spellcheck: files.spellcheck }) {
+        // const fileContent = files[k]
+        for(const _element of elementsWithText) {
+          const element = _element.classList.contains("generated-span") ? (_element.parentElement ? _element.parentElement : _element) : _element
+          const elText = element.innerText
+  
+          const entireHTML = elText.split(" ")
+            .map(wrd => {
+              const endsWithDot = wrd[wrd.length - 1] == "."
+              const w = endsWithDot ? wrd.slice(0, -1) : wrd
+
+              if(!(/^[a-z0-9]+$/gi.test(w))) return w
+
+              let basic = 
+                  files.pastense.includes(w) ?
+                    `<span class="generated-span purple-underline current-word">${w}</span>` :
+                    files.restricted.includes(w) ?
+                      `<span class="generated-span orange-underline current-word">${w}</span>` :
+                        !files.spellcheck.includes(w) ? 
+                          `<span class="generated-span red-underline current-word">${w}</span>` :
+                          `<span class="generated-span current-word">${w}</span>`
+              if(!basic) basic = `<span class="generated-span current-word">${w}</span>`
+
+              return basic + (endsWithDot ? "." : "")
+            })
+            .join(" ")
+          element.innerHTML = entireHTML
+
+          setTimeout(() => {
+            $(".current-word").on("click", ev => {
+            })
+            // const words = [...document.getElementsByClassName("current-word")]
+            // for(const word of words) word.onclick = ev => console.log("EVENT >>", ev)
+            // for(const word of words) word.onfocus = ev => console.log("EVENT >>", ev)
+          }, 500);
+        }
+      // }
+    }
+
+    function processImages() {
+      var candidates1 = playerEl.getElementsByTagName("p");
+      var candidates2 = playerEl.getElementsByTagName("span");
+
+      var candidates = []
+      for(const c of candidates1) candidates.push(c)
+      for(const c of candidates2) candidates.push(c)
+
+      const images = candidates.filter(c => c.innerHTML.startsWith("# IMAGE:"));
+
+      for(const img of images) {
+        var imgPath = `file://${projPath}/${img.innerHTML.replace("# IMAGE:", "").trim()}`
+        var html = `<img src="${imgPath}"/>`
+        img.innerHTML = html
+      }
+    }
+
+    function transformSidebarForSpellcheck() {
+      const suggestionList = document.getElementById("suggestion-list")
+      if(suggestionList) {
+        const word = editor.getSelectedText()
+        if(!word) return suggestionList.innerHTML = `<p></p>`
+        let basic = files.pastense.includes(word) ?
+          "pastense" :
+          files.restricted.includes(word) ?
+            "restricted" :
+              !files.spellcheck.includes(word) ? 
+                "spellcheck" : 
+                "none"
+        if(!basic) basic = "none"
+        const currCat = document.getElementById("spellcheck-category-input")
+        if(currCat.value == "spellcheck" && basic == "spellcheck") suggestionList.innerHTML = `${levenSort(files[currCat.value], editor.getSelectedText()).slice(0, 3).map(x => `<p>${x}</p>`).join("\n")}`
+        else suggestionList.innerHTML = `<p>No suggestiosn for ${currCat.value == "spellcheck" ? basic : currCat.value}</p>`
+      }
+
+      const sidebarWrapper = document.getElementById("knot-stitch-wrapper")
+      if(!sidebarWrapper.children.length) return
+
+      const spellcheckBox = document.getElementById("spellcheck-box")
+      if(!projPath) {
+        spellcheckBox.disabled = true
+        return
+      }
+      if(!spellcheckBox.checked) {
+        if(oldHTML) sidebarWrapper.innerHTML = oldHTML
+        return
+      }
+
+
+      if(sidebarWrapper.children[0].classList.contains("main-suggestions")) return
+
+      oldHTML = sidebarWrapper.innerHTML
+
+      sidebarWrapper.innerHTML = `
+        <div class="main-suggestions">
+          <div class="suggestions">
+            <h2>Suggestions: </h2>
+            <div id="suggestion-list"></div>
+          </div>
+          <div class="add-words">
+            <h2>Learn More</h2>
+            <input id="current-word" type="text"/>
+            <p id="add-word">+add</p>
+            <p id="rem-word">-remove</p>
+          </div>
+          <div class="spellcheck-category">
+            <select id="spellcheck-category-input">
+              <option value="spellcheck">SPELLCHECK</option>
+              <option value="restricted">RESTRICTED</option>
+              <option value="pastense">PAST TENSE</option>
+            </select>
+          </div>
+        </div>
+      `
+
+      setTimeout(() => {
+        const currWord = document.getElementById("current-word")
+        const addWordEl = document.getElementById("add-word")
+        const remWordEl = document.getElementById("rem-word")
+        const currentCategoryEl = document.getElementById("spellcheck-category-input")
+
+        addWordEl.onclick = ev => {
+          files[currentCategoryEl.value].push(currWord.value)
+          serializeFile(currentCategoryEl.value, files[currentCategoryEl.value])
+          currWord.value = ""
+        }
+
+        remWordEl.onclick = ev => {
+          files[currentCategoryEl.value] = files[currentCategoryEl.value].filter(x => x != currWord.value)
+          serializeFile(currentCategoryEl.value, files[currentCategoryEl.value])
+          currWord.value = ""
+        }
+      }, 500);
+    }
+
+    function transformSidebarForCharacters() {
+      // const suggestionList = document.getElementById("suggestion-list")
+
+      if(!projPath) {
+        const characterCheckBox = document.getElementById("character-box")
+        characterCheckBox.disabled = true
+        return
+      }
+  
+      const sidebarWrapper = document.getElementsByClassName("nav-wrapper")[0]
+      if(!sidebarWrapper.children.length) return
+
+      const characterCheckBox = document.getElementById("character-box")
+      const storyCheckBox = document.getElementById("story-box")
+      const watchCheckBox = document.getElementById("watch-box")
+
+      if(storyCheckBox.checked) return
+      if(watchCheckBox.checked) return
+      if(!characterCheckBox.checked && !storyCheckBox.checked) {
+        if(oldHTML2) sidebarWrapper.innerHTML = oldHTML2
+        return
+      }
+
+      const characterList = document.getElementsByClassName("characters-list")[0]
+      if(characterList) characterList.innerHTML = `${charactersDB.characters.map(ch => `<div id="${encodeURIComponent(JSON.stringify(ch))}" class="character-list-item">
+          <img src="${ch.image}"/>
+          <p>${ch.name}</p>
+        </div>`).join("\n")}`
+
+        // setTimeout(() => {
+        //   const characterEls = document.getElementsByClassName("character-list-item")
+        //   for(const el of characterEls) el.onclick = () => {
+        //     console.log(el)
+        //     currWindow = createBrowserWindow(JSON.parse(decodeURIComponent(el.id)))
+        //   }
+        // }, 500);
+
+        const characterDesc = document.getElementsByClassName("character-desc")[0]
+        if(characterDesc) {
+          var currline = editor.getSelectionRange().start.row;
+          var wholelinetxt = editor.session.getLine(currline);
+          const content = wholelinetxt;
+          const data = charactersDB.characters.filter(
+            ch => {
+              if(
+                content.split(" ").includes(ch.name) || content.split(" ").includes(ch.name + ".") || content.split(" ").includes(ch.name + ",") ||
+                content.split(" ").includes(ch.title) || content.split(" ").includes(ch.title + ".") || content.split(" ").includes(ch.title + ",") ||
+                content.split(" ").includes(ch.role) || content.split(" ").includes(ch.role + ".") || content.split(" ").includes(ch.name + ",")
+              ) return true
+              if(content.startsWith("===") && (content.endsWith("===") || content.endsWith("===\n"))) {
+                console.log(currline)
+                const fullFileContent = editor.getValue()
+                const fullFileContentArr = fullFileContent.split("\n")
+                const endIndex = fullFileContentArr.findIndex((x, i) => x.startsWith("-> DONE") && i > currline)
+                const lines = fullFileContentArr.filter((_, i) => i > currline && i < endIndex)
+                const totalContent = lines.join("\n")
+                if(totalContent.includes(ch.name) || totalContent.includes(ch.title) || totalContent.includes(ch.role)) return true
+              }
+              return false
+            }
+          ).map(x => x.name).join(", ")
+          if(content && data) characterDesc.innerHTML = `<p>This includes characters ${data}</p>`
+          else characterDesc.innerHTML = ""
+        }
+
+      if(sidebarWrapper.children[0].classList.contains("main-chracters")) return
+
+      oldHTML2 = sidebarWrapper.innerHTML
+
+      sidebarWrapper.innerHTML = `
+        <div class="main-chracters">
+          <div class="character-desc"></div>
+          <div class="characters-list">
+            ${charactersDB.characters.map(ch => `<div id="${encodeURIComponent(JSON.stringify(ch))}" class="character-list-item">
+              <img src="${ch.image}"/>
+              <p>${ch.name}</p>
+            </div>`).join("\n")}
+          </div>
+          <div class="character-footer">
+            <p id="${encodeURIComponent(JSON.stringify({}))}" class="character-modal">+ Add Character</p>
+          </div>
+        </div>
+      `
+    }
+
+    function transformSidebarForStory() {
+      // const suggestionList = document.getElementById("suggestion-list")
+
+      const sidebarWrapper = document.getElementsByClassName("nav-wrapper")[0]
+      if(!sidebarWrapper.children.length) return
+
+      const storyCheckBox = document.getElementById("story-box")
+      const watchCheckBox = document.getElementById("watch-box")
+      const characterCheckBox = document.getElementById("character-box")
+
+      if(characterCheckBox.checked) return
+      if(watchCheckBox.checked) return
+      if(!storyCheckBox.checked) {
+        return
+      }
+
+      const storyEl = [...document.getElementsByClassName("main-story")][0]
+      if(storyEl) return
+
+      sidebarWrapper.innerHTML = genStory()
+
+    }
+
+    function indexKnots() {
+      const allValue = editor.getValue()
+      const xs = allValue.split("===")
+
+      const knots = xs.slice(1, xs.length).map(str => {
+        const [val] = str.split("-> DONE")
+        return val
+      })
+
+      const obj = {}
+      for(let i = 0; i < knots.length; i += 2) {
+        const key = knots[i].trim()
+        const val = knots[i+1]
+        obj[key] = val
+      }
+
+      const ys = allValue.split("\n")
+      const arr = []
+      for(let i = 0; i < ys.length; i++) {
+        const x = ys[i]
+        if(x.startsWith("=") && !x.startsWith("===")) {
+          arr.push(x.replace("=", ""))
+          i += 1
+          let str = ""
+          while(ys[i] && !ys[i].startsWith("-> DONE")) {
+            str += `${ys[i]}\n`
+            i += 1
+          }
+          arr.push(str)
+          i -= 1
+        }
+      }
+      const obj2 = {}
+      for(let i = 0; i < arr.length; i += 2) {
+        const key = arr[i].trim()
+        const val = arr[i+1]
+        obj2[key] = val
+      }
+  
+      const newKnotObject = {...obj, ...obj2}
+      for(const [k, v] of Object.entries(knotObject))
+        if(k.startsWith("gen>")) newKnotObject[k] = v
+      knotObject = newKnotObject
+    }
+  
+    function processInStoryText() {
+      const storyEls = [...document.getElementsByClassName("storyText")]
+      const markedElements = []
+      const sectionMarkedElements = []
+
+      const flatStoryEls = storyEls.map(x => [...x.children]).flat()
+      const storyElChildren = flatStoryEls.filter((x, i) => {
+        const string = getImmediateText(x)
+        const isSection = string == "=>"
+
+        if(isSection && flatStoryEls[i+1]) markedElements.push(flatStoryEls[i+1])
+
+        if(isSection) {
+          let n = 0
+          while(flatStoryEls[i-n] && !getImmediateText(flatStoryEls[i-n]).startsWith("[")) n++
+          const startingOfSection = flatStoryEls[i-n]
+
+          let n2 = 0
+          const arr = []
+          while(flatStoryEls[i-n2] && !getImmediateText(flatStoryEls[i-n2]).startsWith("[")) {
+            arr.push(flatStoryEls[i-n2])
+            n2++
+          }
+          const reversed = arr.reverse()
+
+          sectionMarkedElements.push([
+            startingOfSection,
+            flatStoryEls[i-1],
+            reversed,
+            getImmediateText(flatStoryEls[i+1]).replace("]", "")
+          ])
+        }
+
+        return isSection
+      })
+
+      for(const el of [...storyElChildren, ...markedElements]) el.innerHTML = ""
+      for(const [starting] of sectionMarkedElements) starting.innerHTML = starting.innerHTML.replace("[", "")
+
+      for(const [start, _, clickableElements, knot] of sectionMarkedElements) {
+        start.id = `knot-id->${knot}`
+        start.classList.add("knot-divert")
+        start.classList.add(`knot-id->${knot}`)
+        for (const el of clickableElements) {
+          el.classList.add("knot-divert")
+          el.classList.add(`knot-id->${knot}`)
+          el.id = `knot-id->${knot}`
+        }
+      }
+
+      for(let i = 0; i < flatStoryEls.length; i++) {
+        const elText = getImmediateText(flatStoryEls[i]).startsWith("[");
+        if(!elText) continue;
+        i++;
+        const shownTextArr = [flatStoryEls[i-1]]
+        const hiddenTextArr = []
+        while(flatStoryEls[i] && !getImmediateText(flatStoryEls[i]).includes("-")) {
+          shownTextArr.push(flatStoryEls[i])
+          i++
+        }
+        flatStoryEls[i].innerHTML = ""
+        while(flatStoryEls[i] && !getImmediateText(flatStoryEls[i]).includes("]")) {
+          hiddenTextArr.push(flatStoryEls[i])
+          i++
+        }
+        hiddenTextArr.push(flatStoryEls[i])
+
+        flatStoryEls[i].innerHTML = flatStoryEls[i].innerHTML.replace("]", "")
+        if(shownTextArr[0]) shownTextArr[0].innerHTML = shownTextArr[0].innerHTML.replace("[", "")
+        for(const el of shownTextArr) {
+          el.classList.add("knot-divert")
+          const randomKnotName = `gen>${Math.round(Math.random()*100000 + 100000)}`
+          knotObject[randomKnotName] = hiddenTextArr.map(x => x.innerText + " ").join(" ")
+          el.id = `knot-id->${randomKnotName}`
+        }
+        for(const el of hiddenTextArr) el.innerHTML = ""
+
+        i--
+      }
+    }
+
+    let errorKnots = []
+    function processErrorKnots() {
+      const knotNames = [...document.getElementsByClassName("filename")]
+      const errors = knotNames.filter(x => errorKnots.contains(x.innerText.trim()))
+      for(const knot of knotNames) knot.parentElement.classList.remove("error-knot")
+      for(const e of errors) {
+        e.parentElement.classList.add("error-knot")
+      }
+    }
+
+    function processKntoSideBar() {
+      const errorLineEls = [...document.getElementsByClassName("ace_error")]
+      const errorLines = errorLineEls.map(el => parseInt(el.innerText))
+
+      const aceContent = editor.getValue()
+      const aceContentArr = aceContent.split("\n")
+
+      const errorKnotNames = []
+
+      for(const no of errorLines) {
+        const n = no-1
+        const aceLine = aceContentArr[n]
+
+        let i = n
+        while(i > -1) {
+          const currline = aceContentArr[i]
+          if(currline.trim().startsWith("=")) {
+            const startsWithThree = currline.trim().startsWith("===")
+            let knotName = startsWithThree ? currline.split("===").join("").trim() : currline.split("=").join("").trim()
+            errorKnotNames.push(knotName)
+            break;
+          }
+          i--;
+        }
+      }
+
+      errorKnots = errorKnotNames
+      processErrorKnots()
+    }
+
+    const processProcessLine = () => {
+      const checkbox = document.getElementById("process-lines-box")
+      if(!checkbox.checked) {
+        const lines = document.getElementsByClassName("ace_line_group")
+        for(const line of lines) line.classList.remove("blue")
+        return
+      }
+      const editorDataArr = editor.getValue().split("\n")
+      const qres = document.querySelector(".innerText.active")
+      const storyTexts = qres.getElementsByClassName("storyText")
+
+      let found = null
+      for(const t of storyTexts) {
+        const innerText = t.innerText
+        let i = undefined
+        const data = editorDataArr.find((line, n) => {
+          i = n
+          console.log(line.trim().split("*").join("").trim(), innerText.trim())
+          return line.trim() == innerText.trim() || line.trim().split("*").join("").trim() == innerText.trim()
+        })
+        if(data) found = i
+      }
+
+      const lineNumber = found
+      console.log(lineNumber)
+      if(found !== undefined) {
+        const lines = document.getElementsByClassName("ace_line_group")
+        console.log(lines)
+        for(const line of lines) line.classList.remove("blue")
+        const line = lines[lineNumber]
+        if(line) {
+          line.classList.add("blue")
+        }
+      }
+    }
+
+    const refreshFonts = () => {
+      loadFontMain("font")
+      loadFontMain("body")
+    }
+
+    let currRow = null
+    const findCurrentVaraiblePossibilities = cb => {
+      const { exec } = require('child_process');
+      const path = require('path')
+      const inklecateNames = {
+          "darwin": "/ink/inklecate_mac",
+          "win32":  "/ink/inklecate_win.exe",
+          "linux": "/ink/inklecate_linux"
+      }
+      const inklecateRootPathRelease = path.join(__dirname, "../../app.asar.unpacked/main-process");
+      const inklecateRootPathDev = __dirname;
+
+      var inklecatePath = path.join(inklecateRootPathRelease, inklecateNames[process.platform]);
+
+      // If inklecate isn't available here, we're probably in development mode (not packaged into a release asar)
+      try { fs.accessSync(inklecatePath) }
+      catch(e) {
+        inklecatePath = path.join(inklecateRootPathDev, inklecateNames[process.platform]);
+      }
+      inklecatePath = inklecatePath.replace("renderer", "main-process")
+
+      const getVariables = story => fromEntries([...story.variablesState._globalVariables.entries()].map(([k, r]) => [k, r.value]))
+      const getCurrentLine = story => editor.getValue().split("\n").findIndex(x => {
+        return x.trim() == story.state.currentText.trim()
+      })
+
+      function collectVariables(story, targetLineNumber) {
+        const variablePossibilities = {}
+
+        function go() {
+          while (
+            story.canContinue || 
+            story.currentChoices.length > 0
+          ) {
+              if (story.canContinue) {
+                  const paragraphText = story.Continue();
+
+                  // Check if the current line number matches the target line number
+                  if (getCurrentLine(story) === targetLineNumber) {
+                    const variables = getVariables(story)
+                    for(const [k, v] of Object.entries(variables)) {
+                      if(variablePossibilities[k]) variablePossibilities[k].add(v)
+                      else variablePossibilities[k] = new Set([v])
+                    }
+                    console.log("Variables at line", targetLineNumber, ":", variables);
+                  }
+              }
+
+              // Automatically choose the first available choice
+              if (story.currentChoices.length > 0) {
+                let i = 0
+                const choices = story.currentChoices
+                for(const choice of choices) {
+                  var stateSnapshot = JSON.parse(JSON.stringify(story.state.ToJson()));
+
+                  story.ChooseChoiceIndex(i);
+
+                  go()
+
+                  if(i != choices.length - 1) story.state.LoadJson(stateSnapshot)
+
+                  i++
+                }              
+              }
+            }
+        }
+
+        go()
+
+        return variablePossibilities
+      }
+
+      const {row} = editor.getCursorPosition()
+      if(currRow === row) return
+      currRow = row
+
+      const storyValue = editor.getValue()
+      fs.writeFileSync("curr_story.ink", storyValue)
+
+      exec(`"${inklecatePath}" -o output.json curr_story.ink`, (error, stdout, stderr) => {
+        if (error) {
+          console.error(`Error: ${error.message}`);
+          return;
+        }
+        if (stderr) {
+          console.error(`stderr: ${stderr}`);
+          return;
+        }
+        const line = row
+        const rootPath = path.resolve(__dirname, '../output.json');
+        const json = fs.readFileSync(rootPath)
+        const story = new inkjs.Story(JSON.parse(json))
+        const variableData = collectVariables(story, line)
+
+        cb(variableData)
+        console.log("VARS", variableData)
+      });
+    }
+
+    const setCurrentVaraiblePossibilities = () => {
+
+      const sidebarWrapper = document.getElementsByClassName("nav-wrapper")[0]
+
+      const storyCheckBox = document.getElementById("story-box")
+      const watchCheckBox = document.getElementById("watch-box")
+      const characterCheckBox = document.getElementById("character-box")
+
+      if(characterCheckBox.checked) return
+      if(storyCheckBox.checked) return
+      if(!watchCheckBox.checked) {
+        return
+      }
+      // const storyEl = [...document.getElementsByClassName("main-story")][0]
+      // if(storyEl) return
+
+      findCurrentVaraiblePossibilities(vars => {
+        console.log(vars)
+        const html = `<div class="variable-object-state">
+          <div class="watch-console">VARIABLE WATCH</div>
+          ${Object.entries(vars).length ? 
+            Object.entries(vars).map(([k, v]) => `<p>${k}: ${[...v].join(" | ")}</p>`).join("") :
+            "<p>No Path Found</p>"
+          }
+        </div>`
+        sidebarWrapper.innerHTML = html
+      })
+    }
+    document.getElementById("spellcheck-box").addEventListener("click", ev => {
+      [...document.getElementsByClassName("knot-toggle")][0].click()
+    })
+
+    document.getElementById("character-box").addEventListener("click", ev => {
+      [...document.getElementsByClassName("nav-toggle")][0].click()
+    })
+
+    document.getElementById("story-box").addEventListener("click", ev => {
+      [...document.getElementsByClassName("nav-toggle")][0].click()
+    })
+
+    document.getElementById("watch-box").addEventListener("click", ev => {
+      [...document.getElementsByClassName("nav-toggle")][0].click()
+    })
+
+    document.body.addEventListener('click', bindClass('character-list-item', (el) => {
+      currWindow = createBrowserWindow(JSON.parse(decodeURIComponent(el.id)))
+    }))
+
+    document.body.addEventListener('click', bindClass('character-modal', (el) => {
+      currWindow = createBrowserWindow(JSON.parse(decodeURIComponent(el.id)))
+    }))
+
+    const ogOrder = {}
+    document.body.addEventListener('click', bindClass('alphabetical-sort', (el) => {
+
+      const checked = el.classList.contains("checked-alphabetical-sort")
+      // console.log(checked, el)
+      // if(checked) el.classList.remove("checked-alphabetical-sort")
+      // else el.classList.add("checked-alphabetical-sort")
+
+      const nowChecked = !checked
+      const group = el.parentElement.parentElement
+
+      if(nowChecked) {
+        ogOrder[el.parentElement.innerText] = group.innerHTML
+        const navItems = [...group.getElementsByClassName("nav-group")].map(el => [el, el.innerText])
+
+        const navItemsSorted = [...navItems].sort(([_1, a], [_2, b]) => a > b ? 1 : -1)
+        let newHTMLArr = [el.parentElement.outerHTML.replace(`class="alphabetical-sort"`, `class="alphabetical-sort checked-alphabetical-sort"`)]
+        for(const [el, text] of navItemsSorted) newHTMLArr.push(el.outerHTML)
+        console.log(newHTMLArr)
+        group.innerHTML = newHTMLArr.join("")
+      } else {
+        group.innerHTML = ogOrder[el.parentElement.innerText]
+        el.classList.remove("checked-alphabetical-sort")
+      }
+      processErrorKnots()
+
+    }))
+
+    document.body.addEventListener('click', bindClass('story-img', (el) => {
+      const els = document.getElementsByClassName("story-img")
+
+      const storyDesc = document.getElementById("story-desc")
+      if(el.classList.contains("red-story-border")) {
+        for(const elx of els) elx.classList.remove("red-story-border")
+        el.classList.remove("red-story-border")
+        storyDesc.innerHTML = ""
+        if(currStoryWindow) {
+          try { currStoryWindow.close() } catch(e) {}
+        }
+        currStoryWindow = createBrowserStoryWindow(JSON.parse(decodeURIComponent(el.id)))
+      } else {
+        for(const elx of els) elx.classList.remove("red-story-border")
+        el.classList.add("red-story-border")
+        const storyDetails = JSON.parse(decodeURIComponent(el.id))
+        storyDetails.text = fs.readFileSync(storyDetails.path, 'utf8')
+        storyDesc.innerHTML = `
+          <div>
+            <h2>${storyDetails.title}</h2>
+            <p>Created: ${storyDetails.created}</p>
+            <p>Edited: ${storyDetails.edited}</p>
+            <p>Knots: ${storyDetails.text.split("===").length - 1}</p>
+            <p>Bytes: ${byteLength(storyDetails.text)}</p>
+          </div>
+        `
+      }
+    }))
+
+    document.body.addEventListener('click', bindClass('knot-divert', (el) => {
+      console.log(knotObject)
+      if(el.classList.contains("knot-divert-clicked")) return
+
+      const knot = el.id.replace("knot-id->", "")
+      const storyText = el.parentElement
+      const lastElementChild = storyText.lastElementChild
+      let knotText = knotObject[knot]
+      if(!knotText) knotText = ""
+
+      for(const el of document.getElementsByClassName(`knot-id->${knot}`)) el.classList.add("knot-divert-clicked")
+      let prevHTML = storyText.innerHTML
+
+      storyText.innerHTML += knotText.split("\n").join(" ").split(" ").map(x => `<span style="color: purple">${x}${x.endsWith(" ") ? "" : " "}</span>`).join("")
+
+      if(!knot.startsWith("gen>")) setTimeout(() => {
+        console.log("comming here")
+        storyText.innerHTML = prevHTML
+      }, 20000);
+
+      console.log(lastElementChild, knotObject[knot])
+    }))
+
+    document.getElementById('search-box').oninput = ev => {
+        const searchTerm = ev.target.value.trim();
+        console.log(searchTerm);
+
+        editor.session.setValue(editor.session.getValue()); // Clear the editor content
+
+        if (searchTerm.length === 0) {
+            return; // If the search term is empty, do not highlight anything
+        }
+
+        var searchRanges = [];
+        editor.findAll(searchTerm, {
+            wrap: true,
+            caseSensitive: false,
+            regExp: false,
+            wholeWord: false
+        }, function (pos) {
+            var range = new Range(pos.start.row, pos.start.column, pos.end.row, pos.end.column);
+            searchRanges.push(range);
+        });
+
+        // Highlight the new search results
+        searchRanges.forEach(function (range) {
+          editor.session.addMarker(range, "textHighlight", "textHighlight", false);
+        });
+    };
+
+    document.body.addEventListener('click', bindId('add-word', (el) => {
+      currWindow = createBrowserWindow(JSON.parse(decodeURIComponent(el.id)))
+    }))
+
+    document.body.addEventListener('click', bindId('rem-word', (el) => {
+      currWindow = createBrowserWindow(JSON.parse(decodeURIComponent(el.id)))
+    }))
+
+    document.body.addEventListener('click', bindClass('story-modal', (el) => {
+      currStoryWindow = createBrowserStoryWindow(JSON.parse(decodeURIComponent(el.id)))
+    }))
+
+    // document.body.addEventListener('click', e => {
+    //   if (window.event) e = event.srcElement;
+    //   else e = e.target;
+
+    //   const parentElement = e;
+    //   const string = [].reduce.call(parentElement.childNodes, function(a, b) { return a + (b.nodeType === 3 ? b.textContent : ''); }, '').trim().split("\n").join("");
+
+    //   const doesEndWithLB = string.endsWith("]")
+
+    // })
+
+    ipcRenderer.on("save-data", (_, data) => {
+      const foundCharIndex = charactersDB.characters.findIndex(ch => ch.name == data.name)
+      console.log("NOW, HERE!!!", _, data, foundCharIndex)
+
+      let og = null
+      if(foundCharIndex != -1) {
+        og = charactersDB.characters[foundCharIndex]
+        charactersDB.characters[foundCharIndex] = data
+      }
+      else charactersDB.characters.push(data)
+
+      if(data.role) {
+        let storedRoles = store.getSync('roles')
+        if(!storedRoles) storedRoles = ""
+        const roles = new Set(storedRoles.split(","))
+        if(og && og.role) roles.delete(og.role)
+        roles.add(data.role)
+        store.setSync('roles', [...roles].join(","))
+        console.log(roles)
+      }
+
+      if(data.title) {
+        let storedTitles = store.getSync('titles')
+        if(!storedTitles || typeof storedTitles != "string") storedTitles = ""
+        console.log(storedTitles)
+        const titles = new Set(storedTitles.split(","))
+        if(og && og.title) titles.delete(og.title)
+        titles.add(data.title)
+        store.setSync('titles', [...titles].join(","))
+        console.log(titles)
+      }
+
+      writeCharacterDB(charactersDB)
+      currWindow.close()
+      currWindow = null
+    })
+
+    ipcRenderer.on("save-story", (_, data) => {
+      console.log("DTA", data)
+      const foundCharIndex = storiesDB.stories.findIndex(ch => ch.id == data.id)
+      console.log("NOW, story!!!", _, data, foundCharIndex)
+      if(foundCharIndex != -1) storiesDB.stories[foundCharIndex] = { ...storiesDB.stories[foundCharIndex], ...data }
+      else storiesDB.stories.push(data)
+      writeStoryDB(storiesDB)
+      currStoryWindow.close()
+      currStoryWindow = null
+
+      
+      const sidebarWrapper = document.getElementsByClassName("nav-wrapper")[0]
+      if(!sidebarWrapper.children.length) return
+
+      const storyCheckBox = document.getElementById("story-box")
+      const watchCheckBox = document.getElementById("watch-box")
+      const characterCheckBox = document.getElementById("character-box")
+
+      if(watchCheckBox.checked) return
+      if(characterCheckBox.checked) return
+      if(!storyCheckBox.checked) {
+        return
+      }
+
+      const storyEl = [...document.getElementsByClassName("main-story")][0]
+      sidebarWrapper.innerHTML = genStory()
+    })
+
+    let lock = false
+    setInterval(function() {
+      if(lock) return
+      lock = true
+
+      processImages()
+      processTextFiles()
+      transformSidebarForSpellcheck()
+      transformSidebarForCharacters()
+      transformSidebarForStory()
+      processKntoSideBar()
+
+      indexKnots()
+      processInStoryText()
+
+      processProcessLine()
+      refreshFonts()
+
+      setCurrentVaraiblePossibilities()
+
+      lock = false
+    }, 500)
+  </script>
+</html>

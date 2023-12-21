@@ -1,0 +1,170 @@
+<html>
+  <head>
+    <meta charset="UTF-8">
+
+    <script>
+      // Add the platform name as a class on the root HTML element for custom CSS
+      document.getElementsByTagName("html")[0].classList.add(process.platform);
+      const placeholder = "data:image/jpeg;base64,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"
+    </script>
+
+    <style>
+        .main-charcter-edit-profile {
+            display: flex;
+        }
+
+        .main-charcter-edit {
+
+        }
+
+        h2 {
+            font-size: 15px;
+        }
+
+        .label-input {
+            display: flex;
+            align-items: center;
+        }
+
+        .label-input > p {
+            margin-right: 10px;
+        }
+
+        .row {
+            display: flex;
+        }
+
+        .label-input > input {
+            width: 50vw;
+            height: 30px;
+        }
+
+        .label-input-col {
+            display: flex;
+            flex-direction: column;
+            margin-right: 20px;
+        }
+
+        .label-input-col > p {
+            margin-right: 10px;
+        }
+
+        .label-input-col > input {
+            width: 10vw;
+            height: 30px;
+        }
+
+        .w-ecol > input {
+            width: 15vw;
+        }
+
+        .half-width {
+            width: 40vw;
+        }
+
+        .half-width > p {
+            font-size: 15px;
+        }
+
+        .primary-btn {
+            margin-top: 1rem;
+
+            width: 130px;
+            height: 50px;
+            border-radius: 10px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: blue;
+            color: white;
+
+            cursor: pointer;
+        }
+
+        #img {
+            max-height: 3rem;
+            max-width: 3rem;
+            object-fit: contain;
+        }
+    </style>
+  </head>
+
+  <body style="background-color: grey;">
+    <p>Name</p>
+    <input type="text" id="name" placeholder="Story Book"/>
+
+    <br/>
+    <br/>
+
+    <p>Thumbnail</p>
+    <input type="file" id="thumbnail"/>
+    <br/>
+
+    <img id="img"/>
+
+    <br/>
+    <br/>
+
+    <p id="story-label">Story</p>
+    <input type="file" id="story"/>
+
+    <br/>
+    <br/>
+
+    <div id="save-button" class="primary-btn">
+        <p>Save</p>
+    </div>
+  </body>
+
+  <script>
+    const { ipcRenderer } = require('electron');
+    const fs = require('fs');
+    const remote = require('electron').remote;
+
+    const imgEl = document.getElementById("img")
+    const nameEl = document.getElementById("name")
+    const storyEl = document.getElementById("story")
+    const storyLabelEl = document.getElementById("story-label")
+    const thumbnailEl = document.getElementById("thumbnail")
+    const saveButtonEl = document.getElementById("save-button")
+
+    let storyPath = null
+
+    storyEl.onchange = e => storyPath = e.target.files[0].path
+
+    thumbnailEl.onchange = ev => {
+        const file = ev.target.files[0]
+        const reader = new FileReader();
+
+        reader.onload = function (e) {
+            imgEl.src = e.target.result;
+        }
+
+        reader.readAsDataURL(file);
+    }
+
+    const JSONStory = window.location.search.split("?story=")[1]
+    const story = JSON.parse(decodeURIComponent(JSONStory))
+
+    if(story.id) {
+        console.log("story", story)
+        nameEl.value = story.title
+        imgEl.src = story.image
+        storyLabelEl.style.display = "none"
+        storyEl.style.display = "none"
+    }
+
+    saveButtonEl.onclick = () => {
+        // const content = fs.readFileSync(storyPath, 'utf8')
+
+        ipcRenderer.send("save-story", JSON.stringify({
+            id: story.id ? story.id : Math.round(100000+Math.random()*100000),
+            created: story.id ? undefined : new Date().toISOString().split("T")[0],
+            edited: new Date().toISOString().split("T")[0],
+            title: nameEl.value,
+            image: imgEl.src,
+            path: story.id ? undefined : storyPath,
+        }))
+    }
+  </script>
+</html>
