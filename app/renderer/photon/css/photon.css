@@ -199,7 +199,7 @@ h6 {
 }
 
 .window-content {
-  position: relative;
+  /* position: relative; */
   overflow-y: auto;
   display: flex;
   flex: 1;

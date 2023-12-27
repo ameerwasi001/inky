@@ -49,7 +49,7 @@ function InkProject(mainInkFilePath) {
 
 InkProject.prototype.createInkFile = function(anyPath, isBrandNew, loadErrorCallback) {
     var inkFile = new InkFile(anyPath || null, this.mainInk, isBrandNew, this.inkMode, {
-        fileChanged: () => { 
+        fileChanged: () => {
             if( inkFile.hasUnsavedChanges && !this.unsavedFiles.contains(inkFile) ) {
                 this.unsavedFiles.push(inkFile);
                 this.refreshUnsavedChanges();
@@ -62,7 +62,7 @@ InkProject.prototype.createInkFile = function(anyPath, isBrandNew, loadErrorCall
         },
 
         // Called when InkFile finds an INCUDE line in the contents of the file
-        includesChanged: () => {         
+        includesChanged: () => {
             this.refreshIncludes();
             if( inkFile.includes.length > 0  )
                 NavView.initialShow();
@@ -79,7 +79,7 @@ InkProject.prototype.createInkFile = function(anyPath, isBrandNew, loadErrorCall
     this.files.push(inkFile);
 
     this.sortFileList();
-    
+
     return inkFile;
 }
 
@@ -120,7 +120,7 @@ InkProject.prototype.refreshIncludes = function() {
             return;
 
         inkFile.includes.forEach(incPath => {
-            
+
             // fix include relative path on windows
             // on windows path should be either always stored using the same folder separator (\\ or /).
             // mixing them can create unexpected behaviours.
@@ -162,7 +162,7 @@ InkProject.prototype.refreshIncludes = function() {
                     });
                 }
             });
-            
+
         });
 
         this.sortFileList();
@@ -176,7 +176,7 @@ InkProject.prototype.refreshIncludes = function() {
 InkProject.prototype.sortFileList = function() {
     var mainInkFile = this.mainInk;
     this.files.sort(function(a,b) {
-        return mainInkFile.includes.indexOf(a.relPath) - mainInkFile.includes.indexOf(b.relPath) 
+        return mainInkFile.includes.indexOf(a.relPath) - mainInkFile.includes.indexOf(b.relPath)
     } );
 }
 
@@ -217,7 +217,7 @@ InkProject.prototype.startFileWatching = function() {
         if( path.extname(basePath) == ".ink" ) {
             basePath = basePath.substring(0, basePath.length-4);
         }
-        
+
         let expectedSettingsPath = basePath + ".settings.json";
         if( expectedSettingsPath != fileAbsPath ) {
             return false; // not a settings file
@@ -349,7 +349,7 @@ function copyFile(source, destination, transform) {
         if( !err && fileContent ) {
             if( transform ) fileContent = transform(fileContent);
             if( fileContent.length < 1 ) throw "Trying to write (copy) empty file!";
-            
+
             fs.writeFile(destination, fileContent, "utf8", err => {
                 if( err ) alert(`Failed to save file '${destination}'`);
             });
@@ -358,7 +358,7 @@ function copyFile(source, destination, transform) {
 }
 
 // exportType is "json", "web", or "js"
-InkProject.prototype.export = function(exportType) {
+InkProject.prototype.export = async function(exportType) {
 
     if( !this.ready ) {
         alert(i18n._("Project not quite fully loaded! Please try exporting again in a couple of seconds..."));
@@ -367,7 +367,7 @@ InkProject.prototype.export = function(exportType) {
 
     // Always start by building the JSON
     var inkJsCompatible = exportType == "js" || exportType == "web";
-    LiveCompiler.exportJson(inkJsCompatible, (err, compiledJsonTempPath) => {
+    LiveCompiler.exportJson(inkJsCompatible, async (err, compiledJsonTempPath) => {
         if( err ) {
             alert(`${i18n._("Could not export:")} ${err}`);
             return;
@@ -410,8 +410,13 @@ InkProject.prototype.export = function(exportType) {
             ]
         }
 
-        dialog.showSaveDialog(remote.getCurrentWindow(), saveOptions, (targetSavePath) => {
-            if( targetSavePath ) { 
+        console.log(remote.getCurrentWindow(), saveOptions)
+        const save = await dialog.showSaveDialog(remote.getCurrentWindow(), saveOptions);
+        console.log("DONE!")
+        if(save && save.filePath){
+            const targetSavePath = save.filePath
+            
+            if( targetSavePath ) {
                 this.defaultExportPath = targetSavePath;
 
                 // JSON export - simply move compiled json into place
@@ -431,10 +436,10 @@ InkProject.prototype.export = function(exportType) {
                             }
                         }
 
-                        // JS file: 
+                        // JS file:
                         if( exportType == "js" ) {
                             this.convertJSONToJS(compiledJsonTempPath, targetSavePath);
-                        } 
+                        }
 
                         // JSON: Just copy into place
                         else {
@@ -454,20 +459,20 @@ InkProject.prototype.export = function(exportType) {
                     //       console.error('Error reading directory:', err);
                     //       return;
                     //     }
-                      
+
                     //     // Filter files with a specific extension (e.g., .jpg, .png)
                     //     const imageFiles = files.filter(file => {
                     //       const ext = path.extname(file).toLowerCase();
                     //       return ext === '.jpg' || ext === '.png' || ext === '.jpeg' || ext === '.gif';
                     //     }).map(x => `${directoryPath}${platformSep}${x}`);
-                      
+
                     //     // Now imageFiles contains an array of image file names
                     //     console.log('Image files in the directory:', imageFiles);
                         this.buildForWeb(compiledJsonTempPath, targetSavePath, directoryPath);
                     // });
                 }
             }
-        });
+        }
     });
 }
 
@@ -503,7 +508,10 @@ InkProject.prototype.jsFilename = function() {
 // Convert JSON to JS file with "var storyContent = "
 InkProject.prototype.convertJSONToJS = function(jsonFilePath, targetJSPath) {
     copyFile(jsonFilePath, targetJSPath, (jsonContent) => {
-        return `var storyContent = ${jsonContent};`;
+        return `
+var plainTextStory = \`${window.storyText}\`; 
+var storyContent = ${jsonContent};
+        `;
     });
 }
 
@@ -514,7 +522,7 @@ InkProject.prototype.buildForWeb = function(jsonFilePath, targetDirectory, inkoP
 
     // Derive story title from save name
     var storyTitle = path.basename(targetDirectory);
-    
+
     // Unless the writer explicitly provided a tag with the title
     var mainInkTagDict = this.mainInk.symbols.globalDictionaryStyleTags;
     if( mainInkTagDict && mainInkTagDict["title"] ) {
@@ -550,10 +558,10 @@ InkProject.prototype.buildForWeb = function(jsonFilePath, targetDirectory, inkoP
             copyFile(path.join(__dirname, "../node_modules/inkjs/dist/ink.js"),
             path.join(targetDirectory, "ink.js"));
 
-            copyFile(path.join(templateDir, "style.css"), 
+            copyFile(path.join(templateDir, "style.css"),
                         path.join(targetDirectory, "style.css"));
 
-            copyFile(path.join(templateDir, "main.js"), 
+            copyFile(path.join(templateDir, "main.js"),
                     path.join(targetDirectory, "main.js"));
         }
     });
@@ -585,11 +593,11 @@ InkProject.prototype.tryClose = function() {
             }
 
             // Cancel
-            else { 
+            else {
                 ipc.send("project-cancelled-close");
             }
         });
-    } 
+    }
 
     // Nothing to save, just exit
     else {
@@ -681,7 +689,7 @@ InkProject.prototype.findSymbol = function(name, posContext) {
             }
         }
     }
-    
+
     if( !baseSymbol ) {
         console.log("Failed to find base symbol: "+baseName);
         return null;
@@ -696,7 +704,7 @@ InkProject.prototype.findSymbol = function(name, posContext) {
             console.log("Failed to find complete path due to not finding: "+tailComp);
             return symbol;
         }
-        
+
         symbol = tailSymbol;
     }
 
@@ -710,7 +718,7 @@ InkProject.prototype.refreshProjectSettings = function(newProjectSettings) {
         this.instructionPrefix = newProjectSettings.instructionPrefix;
 
         PlayerView.setInstructionPrefix(this.instructionPrefix);
-        
+
         // Refresh the InkMode, which affects syntax highlighting.
         // This allows users to customise the "instructionPrefix", which
         // is the game-specific convension to use something like ">>> CAMERA: Wide angle"
@@ -758,6 +766,7 @@ ipc.on("project-new-include", () => {
 });
 
 ipc.on("project-save", (event) => {
+    console.log("Saving project >", InkProject.currentProject)
     if( InkProject.currentProject ) {
         InkProject.currentProject.save();
     }

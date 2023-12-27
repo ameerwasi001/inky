@@ -36,7 +36,7 @@ function compile(compileInstruction, requester) {
 
     var sessionId = compileInstruction.sessionId;
 
-    console.log(`Launching inklecate for session id '${sessionId}'`);
+    // console.log(`Launching inklecate for session id '${sessionId}'`);
 
     var uniqueDirPath = path.join(tempInkPath, compileInstruction.namespace);
 
@@ -163,8 +163,8 @@ function compile(compileInstruction, requester) {
             // Ignore blank lines
             if( line.length == 0 )
                 continue;
-            
-            
+
+
             try {
                 var jsonResponse = JSON.parse(line);
             } catch(err) {
@@ -205,13 +205,13 @@ function compile(compileInstruction, requester) {
                 requester.send('play-generated-errors', inkErrors, sessionId);
                 inkErrors = [];
             }
-            
+
             // Compile success?
             else if( jsonResponse["compile-success"] !== undefined ) {
                 // Whether true or false, it's done
                 requester.send('compile-complete', sessionId);
             }
-            
+
             // Tags
             else if( jsonResponse.tags !== undefined ) {
                 requester.send('play-generated-tags', jsonResponse.tags, sessionId);
@@ -236,7 +236,7 @@ function compile(compileInstruction, requester) {
                 else
                     requester.send('play-requires-input', sessionId);
             }
-            
+
             // DebugSource and expression result
             else if( jsonResponse.cmdOutput !== undefined ) {
 
@@ -251,17 +251,17 @@ function compile(compileInstruction, requester) {
                     requester.send('play-evaluated-expression', jsonResponse.cmdOutput, sessionId);
                 }
             }
-            
+
             // Story text
             else if( jsonResponse.text !== undefined ) {
                 requester.send('play-generated-text', jsonResponse.text, sessionId);
             }
-            
+
             // End of story, but keep process running for debug source lookups
             else if( jsonResponse.end ) {
                 onEndOfStory();
             }
-            
+
             // Stats
             else if( jsonResponse.stats ) {
                 requester.send('return-stats', jsonResponse.stats, sessionId);
@@ -287,7 +287,7 @@ function compile(compileInstruction, requester) {
 
         delete sessions[sessionId];
 
-        console.log(` - Ended inklecate session id ${sessionId}`);
+        // console.log(` - Ended inklecate session id ${sessionId}`);
     };
 
     playProcess.on('close', processCloseExit);

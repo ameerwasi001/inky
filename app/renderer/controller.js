@@ -1,4 +1,6 @@
 const electron = require("electron");
+const dialog = require("electron").dialog;
+const store = require('electron-json-storage');
 const ipc = electron.ipcRenderer;
 const fs = require('fs');
 
@@ -86,7 +88,7 @@ NavHistory.setEvents({
 
 LiveCompiler.setEvents({
     resetting: (sessionId) => {
-        
+
     },
     compileComplete: (sessionId) => {
         PlayerView.prepareForNewPlaythrough(sessionId);
@@ -188,25 +190,156 @@ const loadFont = (fontPath, titleEl, img, main=Date.now()) => {
     })
 }
 
+ipc.on("edit-data", (event, visible) => {
+
+    var modal = document.getElementById("myModal2");
+    const modalContent = modal.getElementsByClassName("modal-content")[0]
+
+    const projectPath = InkProject.currentProject.activeInkFile.projectDir
+    const fileSrc = `${projectPath}\\title.png`
+    const titlePath = `${projectPath}\\title.txt`
+    const fontPath = `${projectPath}\\font.ttf`
+    const fontBodyPath = `${projectPath}\\body.ttf`
+
+    const exitsFile = fs.existsSync(fileSrc)
+    const titleText = !fs.existsSync(titlePath) ? [fs.writeFileSync(titlePath, ''), ''][1] : fs.readFileSync(titlePath, 'utf8')
+
+    console.log(modalContent)
+    modalContent.innerHTML = `<div>
+        <img id="main-img" src="${fileSrc}?${Date.now()}" style="display: ${exitsFile ? 'block' : 'none'}"/>
+        <br/>
+        <input id="main-img-input" type="file"/>
+
+        <p>Title</p>
+        <input id="main-title-input" type="text"/>
+
+        <p>Heading Font</p>
+        <input id="main-font-input" type="file"/>
+
+        <p>Body Font</p>
+        <input id="body-font-input" type="file"/>
+    </div>
+    <div id="ok-button" class="ok-button">
+        <p>Ok</p>
+    </div>
+    `
+
+    modal.style.display = "block";
+    const div = document.querySelector(".ace_layer.ace_gutter-layer.ace_folding-enabled")
+    const okButton = document.getElementById("ok-button")
+    div.style.display = "none"
+
+    window.onclick = function(event) {
+        if (event.target == modal) {
+            modal.style.display = "none";
+            div.style.display = undefined;
+        }
+    }
+
+    
+    okButton.onclick = () => {
+        modal.style.display = "none";
+        div.style.display = undefined;
+    }
+
+    const imgInput = document.getElementById("main-img-input")
+    const img = document.getElementById("main-img")
+    const titleEl = document.getElementById("statistics-title")
+    const titleInputeEl = document.getElementById("main-title-input")
+    const fontInputeEl = document.getElementById("main-font-input")
+    const bodyInputeEl = document.getElementById("body-font-input")
+
+    titleInputeEl.value = titleText
+
+    // loadFont(fontPath, titleEl, img)
+
+    titleInputeEl.oninput = ev => {
+        fs.writeFile(titlePath, ev.target.value, err => {
+            if(err) console.error(err)
+        })
+        titleEl.innerHTML = ev.target.value
+    }
+
+    imgInput.onchange = ev => {
+        const file = ev.target.files[0]
+        const filePath = file.path
+        fs.copyFile(filePath, fileSrc, err => {
+            if(err) return console.error(err)
+            img.src = `file://${fileSrc}?${Date.now()}`
+            img.style.display = "block"
+        })
+    }
+
+    fontInputeEl.onchange = ev => {
+        const file = ev.target.files[0]
+        const filePath = file.path
+        fs.copyFile(filePath, fontPath, err => {
+            if(err) return console.error(err)
+            loadFont(fontPath, titleEl, img)
+        })
+    }
+
+    bodyInputeEl.onchange = ev => {
+        const file = ev.target.files[0]
+        const filePath = file.path
+        fs.copyFile(filePath, fontBodyPath, err => {
+            if(err) return console.error(err)
+            console.log(fontBodyPath)
+            loadFont(fontBodyPath, { style: {} }, img, 'body')
+        })
+    }
+
+});
+
+ipc.on("story-path", async () => {
+    console.log("Here!", electron)
+    const windowData = await electron.remote.dialog.showOpenDialog(electron.remote.getCurrentWindow(), {
+        title: "Set Main Directory for Inky",
+        message: "The path will be used to save, locate and display stories, characters and related images",
+        properties: ['openDirectory']
+    })
+
+    if(windowData && windowData.filePaths && windowData.filePaths[0]) {
+        const filePath = windowData.filePaths[0]
+        store.setSync('storyPath', filePath)
+    }
+
+    const okButton = document.getElementById("ok-button")
+    
+    okButton.onclick = () => {
+        modal.style.display = "none";
+        div.style.display = undefined;
+    }
+})
+
 ipc.on("project-stats", (event, visible) => {
     LiveCompiler.getStats((statsObj) => {
 
         let messageLines = [];
         messageLines.push(i18n._("Project statistics:"));
         messageLines.push("");
-        
-        messageLines.push(`${i18n._("Words")}: ${statsObj["words"].toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}`);
-        messageLines.push(`${i18n._("Bytes")}: ${(statsObj["words"]*2).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}`);
         messageLines.push("");
+        messageLines.push("");
+
+        messageLines.push(`${i18n._("Words")}: ${statsObj["words"].toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}`);
+        messageLines.push(`${i18n._("Bytes")}: ${(editor.getValue().length*2).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}`);
+        messageLines.push("");
+        messageLines.push("");
+        messageLines.push("");
+
 
         messageLines.push(`${i18n._("Knots")}: ${statsObj["knots"].toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}`);
         messageLines.push(`${i18n._("Stitches")}: ${statsObj["stitches"].toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}`);
         messageLines.push(`${i18n._("Functions")}: ${statsObj["functions"].toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}`);
         messageLines.push("");
- 
+        messageLines.push("");
+        messageLines.push("");
+
         messageLines.push(`${i18n._("Choices")}: ${statsObj["choices"].toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}`);
         messageLines.push(`${i18n._("Gathers")}: ${statsObj["gathers"].toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}`);
         messageLines.push(`${i18n._("Diverts")}: ${statsObj["diverts"].toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}`);
+        messageLines.push("");
+        messageLines.push("");
         messageLines.push("");
 
         // messageLines.push(i18n._("Notes: Words should be accurate. Knots include functions. Gathers and diverts may include some implicitly added ones by the compiler, for example in weave. Diverts include END and DONE."));
@@ -226,18 +359,16 @@ ipc.on("project-stats", (event, visible) => {
 
         modalContent.innerHTML = `<div class="statistics-modal-content">
             <div class="statistics-left">
+                <h2 id="statistics-title" style="margin: 0px; padding: 0">${titleText}</h2>
                 ${messageLines.map(x => `<p>${x}</p>`).join("")}
             </div>
             <div class="statistics-right">
-                <h2 id="statistics-title" style="margin: 0px; padding: 0">${titleText}</h2>
                 <img id="main-img" src="${fileSrc}?${Date.now()}" style="display: ${exitsFile ? 'block' : 'none'}"/>
-                <input id="main-img-input" type="file"/>
-                <input id="main-title-input" type="text"/>
-                <input id="main-font-input" type="file"/>
-                <input id="body-font-input" type="file"/>
             </div>
         </div>
-        <p>Notes: Words should be accurate. Knots include functions. Gathers and diverts may include some implicitly added ones by the compiler, for example in weave. Diverts include END and DONE.</p>
+        <div id="ok-button" class="ok-button">
+            <p>Ok</p>
+        </div>
         `
 
         modal.style.display = "block";
@@ -251,52 +382,16 @@ ipc.on("project-stats", (event, visible) => {
             }
         }
 
-        const imgInput = document.getElementById("main-img-input")
         const img = document.getElementById("main-img")
         const titleEl = document.getElementById("statistics-title")
-        const titleInputeEl = document.getElementById("main-title-input")
-        const fontInputeEl = document.getElementById("main-font-input")
-        const bodyInputeEl = document.getElementById("body-font-input")
-
-        titleInputeEl.value = titleText
+        const okButton = document.getElementById("ok-button")
+    
+        okButton.onclick = () => {
+            modal.style.display = "none";
+            div.style.display = undefined;
+        }
 
         loadFont(fontPath, titleEl, img)
-
-        titleInputeEl.oninput = ev => {
-            fs.writeFile(titlePath, ev.target.value, err => {
-                if(err) console.error(err)
-            })
-            titleEl.innerHTML = ev.target.value
-        }
-
-        imgInput.onchange = ev => {
-            const file = ev.target.files[0]
-            const filePath = file.path
-            fs.copyFile(filePath, fileSrc, err => {
-                if(err) return console.error(err)
-                img.src = `file://${fileSrc}?${Date.now()}`
-                img.style.display = "block"
-            })
-        }
-
-        fontInputeEl.onchange = ev => {
-            const file = ev.target.files[0]
-            const filePath = file.path
-            fs.copyFile(filePath, fontPath, err => {
-                if(err) return console.error(err)
-                loadFont(fontPath, titleEl, img)
-            })
-        }
-
-        bodyInputeEl.onchange = ev => {
-            const file = ev.target.files[0]
-            const filePath = file.path
-            fs.copyFile(filePath, fontBodyPath, err => {
-                if(err) return console.error(err)
-                console.log(fontBodyPath)
-                loadFont(fontBodyPath, { style: {} }, img, 'body')
-            })
-        }
 
     });
 });
@@ -454,7 +549,7 @@ ipc.on("zoom", (event, amount) => {
     let playerEl = document.getElementById("player");
 
     let currentSize = editorEl.style.fontSize;
-    
+
     if(amount > 2) {
         editorEl.style.fontSize = 12 * amount / 100 + "px";
         playerEl.style.fontSize = 12 * amount / 100 + "px";
@@ -474,7 +569,7 @@ ipc.on("zoom", (event, amount) => {
             currentSize = parseInt(currentSize);
             currentSize += amount;
         }
-        
+
         editorEl.style.fontSize = currentSize + "px";
         playerEl.style.fontSize = currentSize + "px";
     }

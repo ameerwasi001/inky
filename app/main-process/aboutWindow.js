@@ -13,7 +13,10 @@ const electronWindowOptions = {
     show: false,
     autoHideMenuBar: true,
     webPreferences: {
-        preload: path.join(__dirname, '..', 'renderer', 'preload.js')
+        preload: path.join(__dirname, '..', 'renderer', 'preload.js'),
+        contextIsolation: false,
+        nodeIntegration: true,
+        enableRemoteModule: true
     }
 };
 

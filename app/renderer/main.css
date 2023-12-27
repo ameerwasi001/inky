@@ -42,12 +42,41 @@ h1 {
   background-color: lightblue;
 }
 
+.check-option {
+  height: 20px;
+  margin-top: 5px;
+}
+
+.disabled-icon {
+  filter: grayscale(100%);
+}
+
 .checked-alphabetical-sort {
   background-color: yellow;
 }
 
 .error-knot {
   background-color: rgba(255, 0, 0, 0.5) !important;
+}
+
+.warning-knot {
+  background-color: rgba(249, 105, 14, 0.5) !important;
+}
+
+.d-none {
+  display: none !important;
+}
+
+.ok-button {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: #1573d1;
+  border-radius: 10px;
+  width: 67px;
+  margin-left: auto;
+  color: white;
+  cursor: pointer;
 }
 
 #search-box {
@@ -57,6 +86,31 @@ h1 {
   width: 200px;
   font-size: 9px;
   padding-left: 5px;
+  margin-left: 225px;
+}
+
+.character-highlight-container {
+  display: flex;
+  flex-direction: column;
+  /* justify-content: center; */
+  align-items: center;
+}
+
+.character-highlight-title {
+  display: none;
+}
+
+.character-highlight-role {
+  display: none;
+}
+
+.character-highlight-container > img {
+  height: 40px;
+}
+
+.character-highlight-container > p {
+  padding: 0;
+  margin: 0;
 }
 
 .hidden {
@@ -120,7 +174,7 @@ h1 {
 }
 
 .story-desc > div {
-  background-color: rgba(250, 0, 0, 0.4)
+  background-color: rgba(250, 0, 0, 0.1)
 }
 
 .story-list {
@@ -218,17 +272,15 @@ h1 {
 }
 
 #toolbar {
-  position: absolute;
   display: flex;
-  top: 0;
   justify-content: space-between;
   width: 100%;
-  height: 49px;
+  height: 50px;
   background: #FBFBFB;
   border-bottom: 1px solid #DDD;
   z-index: 50;
   cursor: default;
-  -webkit-user-select: none;
+  align-items: flex-end;
 }
 
 #toolbar div {
@@ -1124,7 +1176,7 @@ img.issue-icon.warning {
 
 /* Modal Content/Box */
 .modal-content {
-  background-color: #fefefe;
+  background-color: #d1cec7;
   margin: 15% auto; /* 15% from the top and centered */
   padding: 20px;
   border: 1px solid #888;
@@ -1137,7 +1189,7 @@ img.issue-icon.warning {
 }
 
 #main-img {
-  height: 27vh;
+  height: 40vh;
 }
 
 .scrollContainer {

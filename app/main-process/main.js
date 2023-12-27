@@ -27,13 +27,14 @@ let hasFinishedLaunch = false;
 let isQuitting = false;
 
 app.on("open-file", function (event, path) {
+    console.log("open-file", path, hasFinishedLaunch);
 
     // e.g. Drag and drop onto app to open it.
     // "open-file" seems to come before "will-finish-launching"
     if( !hasFinishedLaunch ) {
         pendingPathToOpen = path;
     }
-    
+
     // Drag and drop onto app while it's already open
     else {
 
@@ -42,11 +43,12 @@ app.on("open-file", function (event, path) {
         if( existingWin ) {
             existingWin.browserWindow.focus();
             existingWin.browserWindow.webContents.send('open-main-ink');
+            existingWin.webContents.openDevTools();
         } else {
-            ProjectWindow.open(path);       
+            ProjectWindow.open(path);
         }
     }
-    
+
     event.preventDefault();
 });
 
@@ -151,6 +153,14 @@ app.on('ready', function () {
             var win = ProjectWindow.focused();
             if (win) win.keyboardShortcuts();
         },
+        storyPath: () => {
+            var win = ProjectWindow.focused();
+            if (win) win.storyPath();
+        },
+        editData: () => {
+            var win = ProjectWindow.focused();
+            if (win) win.editData();
+        },
         stats: () => {
             var win = ProjectWindow.focused();
             if (win) win.stats();
@@ -233,7 +243,7 @@ app.on('ready', function () {
         ProjectWindow.open(pendingPathToOpen);
         pendingPathToOpen = null;
     }
-    
+
     // Otherwise, show new empty window
     else {
         ProjectWindow.createEmpty();
@@ -243,6 +253,7 @@ app.on('ready', function () {
     let theme = ProjectWindow.getViewSettings().theme;
     AboutWindow.changeTheme(theme);
     DocumentationWindow.changeTheme(theme);
+    // ProjectWindow.webContents.openDevTools()
 
     hasFinishedLaunch = true;
 

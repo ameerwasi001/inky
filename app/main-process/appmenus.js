@@ -337,6 +337,18 @@ function refresh() {
                         accelerator: 'CmdOrCtrl+Shift+C',
                         enabled: callbacks.isFocusedWindow,
                         click: callbacks.stats
+                },
+                {
+                    label: i18n._('Edit Story Data'),
+                    accelerator: 'CmdOrCtrl+Shift+C',
+                    enabled: callbacks.isFocusedWindow,
+                    click: callbacks.editData
+                },
+                {
+                    label: i18n._('Set Inky Main Directory'),
+                    accelerator: 'CmdOrCtrl+Shift+C',
+                    enabled: callbacks.isFocusedWindow,
+                    click: callbacks.storyPath
                 }
             ]
         },
@@ -363,15 +375,15 @@ function refresh() {
                         {
                             label: i18n._('Reload web view'),
                             accelerator: 'CmdOrCtrl+R',
-                            click(item, focusedWindow) {
+                            async click(item, focusedWindow) {
                                 if (!focusedWindow) return;
-                                var clickedButtonIdx = dialog.showMessageBox(focusedWindow, {
+                                var clickedButtonIdx = await dialog.showMessageBox(focusedWindow, {
                                     type: 'question',
                                     buttons: [i18n._('Yes'), i18n._('Cancel')],
                                     title: i18n._('Reload?'),
                                     message: i18n._('Are you sure you want to reload the current window? Any unsaved changes will be lost.')
                                 });
-                                if( clickedButtonIdx == 0 ) {
+                                if( clickedButtonIdx.checkboxChecked == 0 ) {
                                     focusedWindow.reload();
                                 }
                             }

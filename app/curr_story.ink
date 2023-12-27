@@ -4,12 +4,12 @@ VAR bool = true
 
 Once upon a time
 
-# IMAGE: img.png
+# IMAGE: flowers.png
 
 Then I saw permanent [some of this - we are here] 124. 
 Then I saw temporary [some of this => label_x] 124. 
 
- * There were actually 5 lines of content.
+ * There were actually 5 lines of content. 
  * [First Line] -> xyz
  * [Second Line] -> abc
  * [Third Line] -> i
@@ -28,7 +28,7 @@ Then I saw temporary [some of this => label_x] 124.
 
 === xyz ===
 12445 jk, img
-abcd efgh
+abcd efgh, newrole
 -> DONE
 
 === i ===

@@ -75,7 +75,7 @@ function updateIssueSummary(issues, issueClickCallback) {
 
     if( errorCount == 0 && warningCount == 0 && todoCount == 0 ) {
         $summary.addClass("hidden");
-        $message.text(i18n._("No issues."));
+        // $message.text(i18n._("No issues."));
         $message.removeClass("hidden");
         $issues.addClass("hidden");
     } else {

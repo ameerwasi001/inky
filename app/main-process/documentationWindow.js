@@ -8,7 +8,13 @@ const electronWindowOptions = {
   minWidth: 700,
   minHeight: 300,
   title: "Documentation",
-  autoHideMenuBar: true
+  autoHideMenuBar: true,
+  webPreferences: {
+      preload: path.join(__dirname, '..', 'renderer', 'preload.js'),
+      contextIsolation: false,
+      nodeIntegration: true,
+      enableRemoteModule: true
+  }
 };
 
 var documentationWindow = null;
@@ -19,7 +25,7 @@ function DocumentationWindow(theme) {
   w.loadURL("file://" + __dirname + "/../renderer/documentation/window.html");
 
   // w.webContents.openDevTools();
-	
+
   w.webContents.on("did-finish-load", () => {
     w.webContents.send("change-theme", theme);
     w.setMenu(null);

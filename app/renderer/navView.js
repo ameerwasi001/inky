@@ -71,7 +71,7 @@ $(document).ready(() => {
             $inputBox.addClass("error");
             setImmediate(() => $inputBox.focus());
         } else {
-            
+
             var shouldAddToMainInk = $addToMainInkCheckbox.get(0).checked;
             var success = events.addInclude(confirmedFilename, shouldAddToMainInk);
             if( success ) setIncludeFormVisible(false);
@@ -115,12 +115,15 @@ function setMainInkFilename(name) {
 }
 
 function setKnots(mainInk){
+    console.log(window.checkboxes, Object.entries(window.checkboxes).map(([_, x]) => x.checked).includes(true))
+    if(window.checkboxes && Object.entries(window.checkboxes).map(([_, x]) => x.checked).includes(true)) return
+
     console.log("set knottt")
 //Parse the symbols before setting the knots
 //TODO: Improved implementation of symbols/when they parse
-//may make this unneeded. This may improve performance, 
+//may make this unneeded. This may improve performance,
 //as currently it parses whenever the user types
-//anything! 
+//anything!
     mainInk.symbols.parse();
     var ranges = mainInk.symbols.rangeIndex;
 
@@ -132,18 +135,18 @@ function setKnots(mainInk){
                     <h5 class="nav-group-title">Content</h5>
                     <div class="alphabetical-sort">a-z</div>
                 </div>
-            </nav>` + 
+            </nav>` +
             '<nav class="nav-group"><span class="nav-group-item nav-tooltip">Knots, stitches and functions are indexed here</span></nav>');
-        
+
         $knotStichNavWrapper.append($content);
 
         return;
     }
-    
+
     var extraClass = ""
 
     var externalsList = getExternals(mainInk);
-    
+
     var $content = $(`<nav class="nav-group">
         <div class="nav-text" style="display: flex; justify-content: space-between">
             <h5 class="nav-group-title">Content</h5>
@@ -163,7 +166,7 @@ function setKnots(mainInk){
         </div>
     </nav>`);
 
-    var foundContent = false; 
+    var foundContent = false;
     var foundFunctions = false;
 
     // $knotStichNavWrapper.append($main);
@@ -197,12 +200,12 @@ function setKnots(mainInk){
         var $group = $(`<nav class="nav-group ${extraClass}"> ${items.sort((a, b) => a > b ? 1 : -1).join("")} </nav>`);
 
         if (symbol.isfunc) {
-            if (externalsList.has(symbol.name)) 
+            if (externalsList.has(symbol.name))
                 $externals.append($group);
             else
                 $functions.append($group);
         }
-        else 
+        else
             $content.append($group);
     });
 
@@ -210,7 +213,7 @@ function setKnots(mainInk){
         $knotStichNavWrapper.append($content);
     if (foundFunctions)
         $knotStichNavWrapper.append($functions);
-    if (externalsList.size > 0) 
+    if (externalsList.size > 0)
         $knotStichNavWrapper.append($externals);
 }
 
@@ -248,9 +251,12 @@ function updateCurrentKnot(mainInk, cursorPos){
 }
 
 function setFiles(mainInk, allFiles) {
+    console.log(window.checkboxes, Object.entries(window.checkboxes).map(([_, x]) => x.checked).includes(true))
+    if(window.checkboxes && Object.entries(window.checkboxes).map(([_, x]) => x.checked).includes(true)) return
+
     var unusedFiles = _.filter(allFiles, f => f.isSpare);
     var normalIncludes = _.filter(allFiles, f => !f.isSpare && f != mainInk);
-    var groupedIncludes = _.groupBy(normalIncludes, f => { 
+    var groupedIncludes = _.groupBy(normalIncludes, f => {
         var dirName = path.dirname(f.relativePath());
         if( dirName == "." )
             dirName = "";
@@ -267,7 +273,7 @@ function setFiles(mainInk, allFiles) {
         });
 
     $fileNavWrapper.empty();
-    
+
     var extraClass = "";
     if( mainInk.hasUnsavedChanges ) extraClass = "unsaved";
     if( mainInk.isLoading ) extraClass += " loading";
@@ -286,11 +292,11 @@ function setFiles(mainInk, allFiles) {
 
         group.files.forEach((file) => {
             var name = file.isSpare ? file.relativePath() : file.filename();
-            
+
             var extraClass = "";
             if( file.hasUnsavedChanges ) extraClass = "unsaved";
             if( file.isLoading ) extraClass += " loading";
-            
+
             items = items + `<span class="nav-group-item ${extraClass}" data-file-id="${file.id}">
             <span class="icon icon-doc-text"></span>
             <span class="filename">${name}</span>
@@ -307,7 +313,7 @@ function setFiles(mainInk, allFiles) {
             </div> ${items} </nav>`);
         $fileNavWrapper.append($group);
     });
-    
+
 }
 
 function highlight$NavGroupItem($navGroupItem) {
@@ -333,17 +339,17 @@ function highlightRelativePath(relativePath) {
 function hideSidebar() {
     if( !visible )
         return;
-    
+
     animateSidebar(0);
 
     visible = false;
 }
 
 function showSidebar(columns) {
-    if (!columns) columns = 1;    
+    if (!columns) columns = 1;
     if( ! visible )
     {
-    
+
         hasBeenShown = true;
 
         // hidden class only exists in initial state
@@ -358,12 +364,12 @@ function showSidebar(columns) {
 }
 
 function animateSidebar(columns) {
-    
+
     $sidebar.animate({
         width: (columns * sidebarWidth)-1 // border
     }, slideAnimDuration, () => {
         if (columns == 0)
-            $sidebar.hide();    
+            $sidebar.hide();
     });
     $twoPane.animate({
         left: (columns * sidebarWidth)
@@ -384,12 +390,12 @@ function animateSidebar(columns) {
         var el;
         for (var idx = 0 ; idx < $navElements.length; idx++) {
             el = $($navElements[idx]);
-            if (!el.hasClass("hidden")) 
+            if (!el.hasClass("hidden"))
             {
                 el.animate({
                     left: (leftPosPercent + "%")
-                }, 0 );  
-                leftPosPercent += widthStepPercent;  
+                }, 0 );
+                leftPosPercent += widthStepPercent;
             }
         }
     }
@@ -418,33 +424,33 @@ function toggle(id, buttonId){
 
     var columns =  2 - $(".nav-wrapper.hidden").length;
     if (columns > 0 && !$sidebarSplit.is(':animated'))
-        sidebarWidth =  $sidebarSplit.position().left / columns; 
+        sidebarWidth =  $sidebarSplit.position().left / columns;
 
-    
+
 
     if ($thisPanel.hasClass("hidden")) {
         columns++;
         $thisPanel.removeClass("hidden");
-        if ($thisPanel.hasClass("hasFooter")) 
+        if ($thisPanel.hasClass("hasFooter"))
             $footer.removeClass("hidden");
         $button.addClass("selected");
     } else {
         columns--;
         $thisPanel.addClass("hidden");
-        if ($thisPanel.hasClass("hasFooter")) 
-            $footer.addClass("hidden"); 
-        $button.removeClass("selected");     
+        if ($thisPanel.hasClass("hasFooter"))
+            $footer.addClass("hidden");
+        $button.removeClass("selected");
     }
 
-   
+
     if (columns == 0) {
         hideSidebar();
-    } else { 
+    } else {
         showSidebar(columns);
-   
+
     }
 
- 
+
 }
 
 
@@ -453,6 +459,8 @@ function toggle(id, buttonId){
 function getExternals(file) {
     return file.symbols.getCachedExternals();
 }
+
+window.setAll = () => [setKnots(), setFiles()]
 
 exports.NavView = {
     setMainInkFilename: setMainInkFilename,
@@ -463,7 +471,7 @@ exports.NavView = {
     setEvents: e => events = e,
     hide: hideSidebar,
     show: showSidebar,
-    initialShow: () => { if( !hasBeenShown ) 
+    initialShow: () => { if( !hasBeenShown )
         toggle("#file-nav-wrapper");
     },
     toggle: toggle,

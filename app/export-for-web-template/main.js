@@ -8,6 +8,129 @@ const loadFont = (fontPath, cb) => {
     })
 }
 
+let knotObject = {}
+
+const getImmediateText = x => [].reduce.call(x.childNodes, function(a, b) { return a + (b.nodeType === 3 ? b.textContent : ''); }, '').trim().split("\n").join("")
+
+const bindClass = (c, f) => e => {
+    if (window.event) e = event.srcElement;
+    else e = e.target;
+
+    const currElContains = e.classList && e.classList.contains(c);
+    const parentElContains = e.parentElement && e.parentElement.classList && e.parentElement.classList.contains(c);
+
+    if (currElContains || parentElContains) f(currElContains ? e : e.parentElement)
+}
+
+function indexKnots() {
+    const allValue = plainTextStory
+    const xs = allValue.split("===")
+
+    const knots = xs.slice(1, xs.length).map(str => {
+      const [val] = str.split("-> DONE")
+      return val
+    })
+
+    const obj = {}
+    for(let i = 0; i < knots.length; i += 2) {
+      const key = knots[i].trim()
+      const val = knots[i+1]
+      obj[key] = val
+    }
+
+    const ys = allValue.split("\n")
+    const arr = []
+    for(let i = 0; i < ys.length; i++) {
+      const x = ys[i]
+      if(x.startsWith("=") && !x.startsWith("===")) {
+        arr.push(x.replace("=", ""))
+        i += 1
+        let str = ""
+        while(ys[i] && !ys[i].startsWith("-> DONE")) {
+          str += `${ys[i]}\n`
+          i += 1
+        }
+        arr.push(str.replace("->DONE", "").replace("-> DONE", ""))
+        i -= 1
+      }
+    }
+    const obj2 = {}
+    for(let i = 0; i < arr.length; i += 2) {
+      const key = arr[i].trim()
+      const val = arr[i+1]
+      obj2[key] = val
+    }
+
+    const newKnotObject = {...obj, ...obj2}
+    for(const [k, v] of Object.entries(knotObject))
+      if(k.startsWith("gen>")) newKnotObject[k] = v
+    knotObject = newKnotObject
+}
+
+function processInStoryText() {
+    const storyEls = [...document.getElementsByTagName("p")].filter(x => x.className == "")
+    const markedElements = []
+    const sectionMarkedElements = []
+
+    const flatStoryEls = storyEls
+    flatStoryEls.forEach((x, i) => {
+        if(!(getImmediateText(x).includes("[") && getImmediateText(x).includes("]"))) return
+        x.style.display = "flex"
+        x.style.alignItems = "center"
+        const string = getImmediateText(x)
+        const isDivert = string.includes("=>") 
+        const isMinusDivert = string.includes("-") 
+        if(isDivert) {
+            const data = string.match(/\[(.*?)\]/)
+            const currStr = data[0]
+            const [text, knot] = currStr.split('=>').map(x => x.replace("[", "").replace("]", "").trim())
+            const newInnerHTML = x.innerHTML.split(currStr.split("=>").join("=&gt;")).join(`<p data-id="${knot.trim()}" class="clickable-knot" style="margin-right: 5px; margin-left: 5px">${text}</p>`)
+            x.innerHTML = newInnerHTML
+        }
+        else if(isMinusDivert) {
+            console.log("hi!")
+            const data = string.match(/\[(.*?)\]/)
+            const currStr = data[0]
+            const [text, knotText] = currStr.split('-').map(x => x.replace("[", "").replace("]", "").trim())
+            const randomKnotNumber = Math.round(Math.random()*10_000+10_000)
+            knotObject[`gen>${randomKnotNumber}`] = knotText
+            const newInnerHTML = x.innerHTML.split(currStr).join(`<p data-id="gen>${randomKnotNumber}" class="clickable-knot" style="margin-right: 5px; margin-left: 5px">${text}</p>`)
+            x.innerHTML = newInnerHTML
+        }
+    })
+
+
+    document.body.addEventListener('click', bindClass('clickable-knot', (el) => {
+        if(el.classList.contains("clicked")) return
+        el.classList.add("clicked")
+
+        const currKnot = el.getAttribute('data-id')
+        console.log(knotObject)
+        const text = knotObject[currKnot].trim()
+        const n = Math.round(Math.random()*10_000+10_000)
+        el.parentElement.innerHTML += `<span id="${n}" style="margin-left: 5px">${text}</span>`
+
+        if(!currKnot.startsWith("gen>")) setTimeout(() => {
+            document.getElementById(n).style.display = "none"
+        }, 20_000);
+    }))
+}
+
+let lock = false
+setInterval(function() {
+    if(lock) return
+    lock = true
+
+    try {
+        indexKnots()
+        processInStoryText()
+    } catch (e) {
+        console.error(e)
+    }
+
+    lock = false
+}, 500);
+
 (function(storyContent) {
 
     // Create ink story from the content using inkjs

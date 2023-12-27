@@ -82,12 +82,13 @@
         }
 
         #image {
+            width: 250px;
             margin-left: 1rem;
         }
     </style>
   </head>
 
-  <body style="background-color: grey;">
+  <body style="background-color: #d1cec7;">
     <div class="main-charcter-edit-profile">
         <div class="main-charcter-edit">
             <input id="upload" type="file" style="display: none;">
@@ -108,106 +109,16 @@
                 <datalist id="role">
                 </datalist>
             </div>
-            <div class="label-input">
-                <p>Archetype:</p>
-                <input type="text" id="archetype"/>
-            </div>
-            <div class="label-input">
-                <p>Style:</p>
-                <input type="text" id="style"/>
-            </div>
         </div>
         <div>
             <img id="image"/>
         </div>
     </div>
-    <div class="physical-section">
-        <h2>Physical</h2>
-        <div class="row">
-            <div class="label-input-col">
-                <p>Age</p>
-                <input type="text" id="age"/>
-            </div>
-            <div class="label-input-col">
-                <p>Height</p>
-                <input type="text" id="height"/>
-            </div>
-            <div class="label-input-col">
-                <p>Weight</p>
-                <input type="text" id="weight"/>
-            </div>
-            <div class="label-input-col">
-                <p>Sex</p>
-                <input type="text" id="sex"/>
-            </div>
-            <div class="label-input-col">
-                <p>Misc.</p>
-                <input type="text" id="misc"/>
-            </div>
-        </div>
-        <div class="row">
-            <div class="label-input-col w-ecol">
-                <p>Eye Color</p>
-                <input type="text" id="eye-color"/>
-            </div>
-            <div class="label-input-col  w-ecol">
-                <p>Hair Color</p>
-                <input type="text" id="hair-color"/>
-            </div>
-            <div class="label-input-col  w-ecol">
-                <p>Body Type</p>
-                <input type="text" id="body-type"/>
-            </div>
-            <div class="label-input-col  w-ecol">
-                <p>Ethinicity</p>
-                <input type="text" id="ethinicity"/>
-            </div>
-        </div>
-    </div>
     <div class="other-section">
-        <h2>Others</h2>
-        <div class="row">
-            <div class="label-input">
-                <p>Occupation</p>
-                <input type="text" id="occupation"/>
-            </div>
-            <div class="label-input">
-                <p>Hobbies</p>
-                <input type="text" style="width: 25vw;" id="hobbies"/>
-            </div>
-        </div>
-        <div class="row">
-            <div class="label-input-col">
-                <p>Background</p>
-                <textarea cols="40" rows="10" id="background"></textarea>
-            </div>
-            <div class="label-input-col">
-                <p>Tags</p>
-                <textarea cols="40" rows="10" id="tags"></textarea>
-            </div>
-        </div>
-        <div class="connection-section">
-            <div class="row">
-                <div class="half-width">
-                    <p>Similar</p>
-                </div>
-                <div class="half-width">
-                    <p>Synonymous</p>
-                </div>
-            </div>
-            <div class="row">
-                <div class="half-width">
-                    <p>Inverted</p>
-                </div>
-                <div class="half-width">
-                    <p>Complimentary</p>
-                </div>
-            </div>
-        </div>
         <div class="notes-section">
             <div class="label-input-col">
-                <h2>Notes</h2>
-                <textarea style="width: 90vw;" rows="10" id="notes"></textarea>
+                <h2>Description</h2>
+                <textarea style="width: 95vw;" rows="10" id="notes"></textarea>
             </div>
         </div>
         <div class="add-character-section">
@@ -229,21 +140,6 @@
         'name',
         'title-input',
         'role-input',
-        'archetype',
-        'style',
-        'age',
-        'height',
-        'weight',
-        'sex',
-        'misc',
-        'eye-color',
-        'hair-color',
-        'body-type',
-        'ethinicity',
-        'occupation',
-        'hobbies',
-        'background',
-        'tags',
         'notes',
     ]
 

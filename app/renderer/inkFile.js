@@ -155,30 +155,31 @@ InkFile.prototype.getAceSession = function() {
     return this.aceSession;
 }
 
-InkFile.prototype.save = function(afterSaveCallback) {
+InkFile.prototype.save = async function(afterSaveCallback) {
 
     assert(this.isMain() || this.mainInkFile.projectDir, "Main ink file must be saved before we can save include files.");
 
     // Need to show save path dialog?
     if( !this.absolutePath() ) {
-        dialog.showSaveDialog(remote.getCurrentWindow(), { filters: [
+        console.log("hi!")
+        const saveObj = await dialog.showSaveDialog(remote.getCurrentWindow(), { filters: [
             { name: 'Ink files', extensions: ['ink'] },
             { name: 'Text files', extensions: ['txt'] }
-        ]}, (savedPath) => {
-            if( savedPath ) {
+        ]});
+        const savedPath = saveObj.filePath
+        if( savedPath ) {
 
-                // If we're showing a save dialog, assume we're in the main ink file
-                assert(this.isMain());
-                this.relPath = path.basename(savedPath);
-                this.projectDir = path.dirname(savedPath);
+            // If we're showing a save dialog, assume we're in the main ink file
+            assert(this.isMain());
+            this.relPath = path.basename(savedPath);
+            this.projectDir = path.dirname(savedPath);
 
-                // Loop back round for a quick save now we have the path
-                this.save(afterSaveCallback);
-            } else {
-                if( afterSaveCallback )
-                    afterSaveCallback(false);
-            }
-        });
+            // Loop back round for a quick save now we have the path
+            this.save(afterSaveCallback);
+        } else {
+            if( afterSaveCallback )
+                afterSaveCallback(false);
+        }
     }
 
     // Quick save to existing path
